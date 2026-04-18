@@ -1,0 +1,197 @@
+.register-page-content {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+    url("/assets/register-police-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.register-form-card {
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.remember-me-field {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.remember-me-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #3f3f3f;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember-me-label:hover {
+  color: #3f3f3f;
+}
+
+.remember-me-checkbox {
+  --size: 19px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--size);
+  height: var(--size);
+  margin: 0;
+  border-radius: 6px;
+  border: 2px solid #d8d8d8;
+  background: #ececec;
+  box-shadow: inset 2px 2px 5px #d0d0d0, inset -2px -2px 5px #ffffff;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+.remember-me-checkbox::after {
+  content: "";
+  width: 5px;
+  height: 10px;
+  border: solid #3f3f3f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.16s ease-in-out;
+  margin-top: -1px;
+}
+
+.remember-me-checkbox:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.remember-me-checkbox:focus-visible {
+  outline: 2px solid #6a8fcb;
+  outline-offset: 2px;
+}
+
+.remember-me-checkbox.register-checkbox-invalid {
+  border-color: #dc3545;
+}
+
+.register-success-card {
+  width: min(460px, 100%);
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.register-success-card p {
+  color: #303747;
+}
+
+.remove-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  background: rgba(20, 24, 36, 0.36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.remove-confirm-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.remove-confirm-actions .pending-action-btn {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.error {
+  color: #dc3545;
+  margin-top: 4px;
+  font-size: 0.875rem;
+}
+
+.role-picker {
+  width: 100%;
+  --sort-pill-w: calc(
+    (100% - (var(--segmented-control-pad) * 2)) / 2
+  );
+}
+
+.role-picker.sort-tabs {
+  width: 100%;
+  display: flex;
+  justify-content: stretch;
+}
+
+.role-picker.sort-tabs::before {
+  width: var(--sort-pill-w);
+}
+
+.role-picker.sort-tabs .sort-btn {
+  flex: 1;
+  width: auto;
+  font-size: 0.74rem;
+  padding: 0 0.65rem;
+  white-space: nowrap;
+}
+
+.role-toggle {
+  width: 100%;
+  transform: none;
+  --segmented-control-border: 2px;
+  justify-content: stretch;
+}
+
+.role-toggle .sort-btn {
+  flex: 1 1 0;
+  width: 50%;
+  min-width: 0;
+  font-size: 0.9rem;
+  height: 44px;
+}
+
+.role-toggle .neu-text {
+  line-height: 1.1;
+}
+
+.role-toggle::before {
+  width: calc(50% - var(--segmented-control-pad));
+  left: var(--segmented-control-pad);
+  transform: none;
+  transition: left 0.22s ease-out;
+}
+
+.role-toggle.is-latest::before {
+  left: var(--segmented-control-pad);
+}
+
+.role-toggle.is-oldest::before {
+  left: 50%;
+}
+
+@media (max-width: 768px) {
+  .role-toggle {
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .register-page-content {
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 576px) {
+  .remove-confirm-actions {
+    flex-direction: column;
+  }
+
+  .remove-confirm-actions .pending-action-btn {
+    width: 100%;
+  }
+}

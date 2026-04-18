@@ -1,0 +1,157 @@
+.people-lines {
+  display: grid;
+  grid-template-columns: var(--people-name-col, max-content) max-content;
+  column-gap: 12px;
+  row-gap: 2px;
+  align-items: baseline;
+}
+
+.person-line {
+  display: contents;
+}
+
+.person-name-part {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.person-age-part {
+  white-space: nowrap;
+}
+
+.table td,
+.table th {
+  vertical-align: top;
+}
+
+.pending-update-actions {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px !important;
+}
+
+.pending-update-actions > .pending-action-btn {
+  width: 100%;
+  min-width: 0;
+}
+
+.comparison-table th {
+  width: 34%;
+}
+
+.evidence-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.evidence-comparison-panel {
+  border: 1px solid #d8e2ef;
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+.evidence-panel-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-card {
+  border: 1px solid #dde6f1;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+}
+
+.evidence-name {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.evidence-link {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.evidence-link:hover {
+  text-decoration: underline;
+}
+
+.evidence-image,
+.evidence-video {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #000;
+  margin-bottom: 8px;
+}
+
+:host-context(body.dark-mode) .pending-user-surface .card-header {
+  background: #223041 !important;
+  border-bottom-color: #33465c !important;
+  color: #dce5ef !important;
+}
+
+:host-context(body.dark-mode) .comparison-table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #dce5ef;
+  --bs-table-striped-bg: #202d3d;
+  --bs-table-striped-color: #dce5ef;
+  --bs-table-border-color: #33465c;
+}
+
+:host-context(body.dark-mode) .comparison-table > :not(caption) > * > * {
+  background-color: transparent;
+  color: #dce5ef;
+  border-bottom-color: #33465c;
+}
+
+:host-context(body.dark-mode) .comparison-table th {
+  color: #c8d8ea;
+}
+
+:host-context(body.dark-mode) .comparison-table td {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .pending-user-surface .text-muted {
+  color: #9fb0c5 !important;
+}
+
+:host-context(body.dark-mode) .evidence-comparison-panel {
+  background: #182330;
+  border-color: #31455a;
+}
+
+:host-context(body.dark-mode) .evidence-card {
+  background: #1f2c3a;
+  border-color: #344a60;
+  color: #dce5ef;
+}
+
+@media (max-width: 576px) {
+  .people-lines {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .evidence-comparison-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pending-update-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pending-update-actions > .pending-action-btn {
+    width: 100%;
+  }
+}

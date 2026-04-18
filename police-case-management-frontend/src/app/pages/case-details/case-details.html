@@ -1,0 +1,315 @@
+<div class="container mt-4">
+  <div *ngIf="loading">Loading details...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+  <div *ngIf="!loading && !error && !caseItem">Case not found.</div>
+
+  <ng-container *ngIf="caseItem">
+    <div class="case-back-actions">
+      <button type="button" class="neu-button" (click)="goBack()" aria-label="Back">
+        <span class="span-mother">
+          <span>B</span>
+          <span>a</span>
+          <span>c</span>
+          <span>k</span>
+        </span>
+        <span class="span-mother2">
+          <span>B</span>
+          <span>a</span>
+          <span>c</span>
+          <span>k</span>
+        </span>
+      </button>
+    </div>
+
+    <div
+      *ngIf="actionMessage"
+      class="alert alert-dismissible fade show text-center app-timed-alert"
+      [ngClass]="{
+        'alert-success': actionMessageType === 'success',
+        'alert-danger': actionMessageType === 'danger',
+        'alert-info': actionMessageType === 'info'
+      }"
+      role="alert"
+    >
+      {{ actionMessage }}
+      <button type="button" class="btn-close" (click)="closeActionMessage()" aria-label="Close"></button>
+    </div>
+
+    <ng-container *ngIf="user?.isAdmin; else clientView">
+      <article
+        class="case-details-card"
+        style="border: 1px solid #ccc; border-radius: 5px; padding: 20px; background: #fff; margin-bottom: 30px"
+      >
+        <h2 class="mb-4">{{ caseItem.case_title }}</h2>
+        <hr class="case-title-divider" />
+        <p class="detail-row">
+          <span class="detail-label"><b>Case ID:</b></span>
+          <span class="detail-value">{{ caseItem._id }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Type:</b></span>
+          <span class="detail-value">{{ caseItem.case_type }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Handler:</b></span>
+          <span class="detail-value">{{ caseItem.case_handler }}</span>
+        </p>
+        <p class="detail-row" *ngIf="caseItem.submitted_by_role">
+          <span class="detail-label"><b>Submitted by:</b></span>
+          <span class="detail-value">{{ submittedByLabel(caseItem) }}</span>
+        </p>
+        <ng-container *ngTemplateOutlet="peopleInvolvedSection"></ng-container>
+        <p class="detail-row">
+          <span class="detail-label"><b>Date:</b></span>
+          <span class="detail-value">{{ caseItem.case_date | date: 'dd-MM-yyyy' }}</span>
+        </p>
+        <p class="detail-row" *ngIf="caseItem.updated_on || caseItem.updatedAt">
+          <span class="detail-label"><b>Updated:</b></span>
+          <span class="detail-value">
+            {{ (caseItem.updated_on || caseItem.updatedAt) | date: 'dd-MM-yyyy HH:mm' }}
+          </span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Status:</b></span>
+          <span class="detail-value">{{ displayCaseStatus(caseItem) }}</span>
+        </p>
+        <p class="detail-row" *ngIf="showApprovalRow(caseItem)">
+          <span class="detail-label"><b>Approval:</b></span>
+          <span class="detail-value">{{ caseItem.isApproved ? 'Approved' : 'Pending' }}</span>
+        </p>
+        <p class="detail-row desc-row">
+          <span class="detail-label"><b>Description:</b></span>
+          <span class="detail-value desc-value-bg">
+            <span style="white-space: pre-wrap">{{ caseItem.case_description }}</span>
+          </span>
+        </p>
+        <p class="detail-row desc-row" *ngIf="changesDone.length">
+          <span class="detail-label"><b>Changes done:</b></span>
+          <span class="detail-value desc-value-bg">
+            <ul class="changes-done-list mb-0 ps-3">
+              <li *ngFor="let change of changesDone">
+                <span style="white-space: pre-wrap">{{ change }}</span>
+              </li>
+            </ul>
+          </span>
+        </p>
+
+        <ng-container *ngTemplateOutlet="evidenceSection"></ng-container>
+
+        <div *ngIf="showPendingDecisionActions" class="case-admin-actions">
+          <button class="pending-action-btn pending-approve-btn neu-button" (click)="handleApprove()">
+            <span class="span-mother" aria-hidden="true">
+              <span>A</span><span>p</span><span>p</span><span>r</span><span>o</span><span>v</span><span>e</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>A</span><span>p</span><span>p</span><span>r</span><span>o</span><span>v</span><span>e</span>
+            </span>
+            <span class="visually-hidden">Approve</span>
+          </button>
+          <button class="pending-action-btn pending-reject-btn neu-button" (click)="handleDeny()">
+            <span class="span-mother" aria-hidden="true">
+              <span>D</span><span>e</span><span>n</span><span>y</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>D</span><span>e</span><span>n</span><span>y</span>
+            </span>
+            <span class="visually-hidden">Deny</span>
+          </button>
+        </div>
+        <div *ngIf="showRemoveAction || showRestoreAction" class="case-admin-actions">
+          <button
+            *ngIf="showRemoveAction"
+            class="pending-action-btn pending-reject-btn neu-button"
+            (click)="handleRemoveFromCaseDetails()"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>a</span><span>s</span><span>e</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>a</span><span>s</span><span>e</span>
+            </span>
+            <span class="visually-hidden">Remove case</span>
+          </button>
+          <button
+            *ngIf="showRestoreAction"
+            class="pending-action-btn pending-approve-btn neu-button"
+            (click)="handleRestoreFromCaseDetails()"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>R</span><span>e</span><span>s</span><span>t</span><span>o</span><span>r</span><span>e</span><span>&nbsp;</span><span>c</span><span>a</span><span>s</span><span>e</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>R</span><span>e</span><span>s</span><span>t</span><span>o</span><span>r</span><span>e</span><span>&nbsp;</span><span>c</span><span>a</span><span>s</span><span>e</span>
+            </span>
+            <span class="visually-hidden">Restore case</span>
+          </button>
+        </div>
+      </article>
+    </ng-container>
+
+    <ng-template #clientView>
+      <article
+        class="case-details-card"
+        style="border: 1px solid #ccc; border-radius: 5px; padding: 20px; background: #fff; margin-bottom: 30px"
+      >
+        <h2 class="mb-4">{{ caseItem.case_title }}</h2>
+        <hr class="case-title-divider" />
+        <p class="detail-row">
+          <span class="detail-label"><b>Case ID:</b></span>
+          <span class="detail-value">{{ caseItem._id }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Type:</b></span>
+          <span class="detail-value">{{ caseItem.case_type }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Handler:</b></span>
+          <span class="detail-value">{{ caseItem.case_handler }}</span>
+        </p>
+        <p class="detail-row" *ngIf="caseItem.submitted_by_role">
+          <span class="detail-label"><b>Submitted by:</b></span>
+          <span class="detail-value">{{ submittedByLabel(caseItem) }}</span>
+        </p>
+        <ng-container *ngTemplateOutlet="peopleInvolvedSection"></ng-container>
+        <p class="detail-row">
+          <span class="detail-label"><b>Date:</b></span>
+          <span class="detail-value">{{ caseItem.case_date | date: 'dd-MM-yyyy' }}</span>
+        </p>
+        <p class="detail-row" *ngIf="caseItem.updated_on || caseItem.updatedAt">
+          <span class="detail-label"><b>Updated:</b></span>
+          <span class="detail-value">
+            {{ (caseItem.updated_on || caseItem.updatedAt) | date: 'dd-MM-yyyy HH:mm' }}
+          </span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Status:</b></span>
+          <span class="detail-value">{{ displayCaseStatus(caseItem) }}</span>
+        </p>
+        <p class="detail-row desc-row">
+          <span class="detail-label"><b>Description:</b></span>
+          <span class="detail-value desc-value-bg">
+            <span style="white-space: pre-wrap">{{ caseItem.case_description }}</span>
+          </span>
+        </p>
+        <p class="detail-row desc-row" *ngIf="changesDone.length">
+          <span class="detail-label"><b>Changes done:</b></span>
+          <span class="detail-value desc-value-bg">
+            <ul class="changes-done-list mb-0 ps-3">
+              <li *ngFor="let change of changesDone">
+                <span style="white-space: pre-wrap">{{ change }}</span>
+              </li>
+            </ul>
+          </span>
+        </p>
+
+        <ng-container *ngTemplateOutlet="evidenceSection"></ng-container>
+
+        <div *ngIf="showCitizenManageActions" class="case-client-actions">
+          <a [routerLink]="citizenEditRoute" class="pending-action-btn pending-check-btn neu-button">
+            <span class="span-mother" aria-hidden="true">
+              <span>E</span><span>d</span><span>i</span><span>t</span><span>&nbsp;</span><span>/</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>p</span><span>r</span><span>o</span><span>o</span><span>f</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>E</span><span>d</span><span>i</span><span>t</span><span>&nbsp;</span><span>/</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>p</span><span>r</span><span>o</span><span>o</span><span>f</span>
+            </span>
+            <span class="visually-hidden">Edit or add evidence</span>
+          </a>
+          <button
+            type="button"
+            class="pending-action-btn pending-reject-btn neu-button"
+            (click)="handleWithdrawFromCaseDetails()"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>W</span><span>i</span><span>t</span><span>h</span><span>d</span><span>r</span><span>a</span><span>w</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>W</span><span>i</span><span>t</span><span>h</span><span>d</span><span>r</span><span>a</span><span>w</span>
+            </span>
+            <span class="visually-hidden">Withdraw case</span>
+          </button>
+        </div>
+        <p *ngIf="showCitizenManageActions && caseItem.citizen_review_status === 'COMMISSIONER_REVIEW'" class="case-client-note">
+          Editing this submission sends it back to inspector review.
+        </p>
+      </article>
+    </ng-template>
+
+    <ng-template #peopleInvolvedSection>
+      <p class="detail-row">
+        <span class="detail-label"><b>Victim:</b></span>
+        <span class="detail-value people-lines" [style.--people-name-col]="peopleNameColumnWidth">
+          <ng-container *ngIf="victimPeople.length; else noVictim">
+            <span class="person-line" *ngFor="let person of victimPeople">
+              <span class="person-name-part">Name: {{ person.name }}</span>
+              <span class="person-age-part">Age: {{ person.age }}</span>
+            </span>
+          </ng-container>
+          <ng-template #noVictim>Unidentified</ng-template>
+        </span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Suspects:</b></span>
+        <span class="detail-value people-lines" [style.--people-name-col]="peopleNameColumnWidth">
+          <ng-container *ngIf="suspectPeople.length; else noSuspect">
+            <span class="person-line" *ngFor="let person of suspectPeople">
+              <span class="person-name-part">Name: {{ person.name }}</span>
+              <span class="person-age-part">Age: {{ person.age }}</span>
+            </span>
+          </ng-container>
+          <ng-template #noSuspect>Unidentified</ng-template>
+        </span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Guilty name:</b></span>
+        <span class="detail-value people-lines" [style.--people-name-col]="peopleNameColumnWidth">
+          <ng-container *ngIf="guiltyPeople.length; else noGuilty">
+            <span class="person-line" *ngFor="let person of guiltyPeople">
+              <span class="person-name-part">Name: {{ person.name }}</span>
+              <span class="person-age-part">Age: {{ person.age }}</span>
+            </span>
+          </ng-container>
+          <ng-template #noGuilty>Unidentified</ng-template>
+        </span>
+      </p>
+    </ng-template>
+
+    <ng-template #evidenceSection>
+      <div class="detail-row evidence-row" *ngIf="evidence.length">
+        <span class="detail-label evidence-label"><b>Evidence:</b></span>
+        <span class="detail-value">
+          <div class="evidence-list">
+            <div class="evidence-item" *ngFor="let evidence of evidence; let i = index">
+              <div class="evidence-name">
+                <b>Evidence Name:</b> {{ evidence.name }}
+              </div>
+              <div class="evidence-file">
+                <div class="evidence-file-label"><b>Evidence File:</b></div>
+
+                <ng-container *ngIf="isImageEvidence(evidence); else notImageEvidence">
+                  <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                    <img class="evidence-image" [src]="evidence.url" [alt]="evidence.name" loading="lazy" />
+                  </a>
+                </ng-container>
+
+                <ng-template #notImageEvidence>
+                  <ng-container *ngIf="isVideoEvidence(evidence); else genericEvidence">
+                    <video class="evidence-video" controls preload="metadata">
+                      <source [src]="evidence.url" [type]="evidence.fileType" />
+                    </video>
+                    <div>
+                      <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">Open video</a>
+                    </div>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #genericEvidence>
+                  <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">Download / open file</a>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

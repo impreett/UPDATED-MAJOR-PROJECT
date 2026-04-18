@@ -1,0 +1,169 @@
+.login-page-content {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+    url("/assets/register-police-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.login-form-card {
+  background: transparent;
+  border: none;
+  box-shadow: none !important;
+}
+
+.glass-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 
+    rgba(0, 0, 0, 0.15) 0px 8px 32px, 
+    rgba(0, 0, 0, 0.05) 0px 2px 8px, 
+    rgba(255, 255, 255, 0.137) 0px 1px 0px inset, 
+    rgba(255, 255, 255, 0.067) 0px -1px 0px inset;
+  backdrop-filter: blur(4px) saturate(1.1);
+  -webkit-backdrop-filter: blur(4px) saturate(1.1);
+  border-radius: 20px;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(57, 57, 57, 0.21) 1%, rgba(151, 151, 151, 0.35) 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.075) 0%, transparent 70%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.remember-me-field {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.remember-me-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #3f3f3f;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember-me-label:hover {
+  color: #3f3f3f;
+}
+
+.remember-me-checkbox {
+  --size: 19px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--size);
+  height: var(--size);
+  margin: 0;
+  border-radius: 6px;
+  border: 2px solid #d8d8d8;
+  background: #ececec;
+  box-shadow: inset 2px 2px 5px #d0d0d0, inset -2px -2px 5px #ffffff;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+.remember-me-checkbox::after {
+  content: "";
+  width: 5px;
+  height: 10px;
+  border: solid #3f3f3f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.16s ease-in-out;
+  margin-top: -1px;
+}
+
+.remember-me-checkbox:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.remember-me-checkbox:focus-visible {
+  outline: 2px solid #6a8fcb;
+  outline-offset: 2px;
+}
+
+.login-error-card {
+  width: min(460px, 100%);
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.login-error-card p {
+  color: #303747;
+}
+
+.remove-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  background: rgba(20, 24, 36, 0.36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.remove-confirm-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.remove-confirm-actions .pending-action-btn {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.error {
+  color: #dc3545;
+  margin-top: 4px;
+  font-size: 0.875rem;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+@media (max-width: 991.98px) {
+  .login-page-content {
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 576px) {
+  .remove-confirm-actions {
+    flex-direction: column;
+  }
+
+  .remove-confirm-actions .pending-action-btn {
+    width: 100%;
+  }
+}

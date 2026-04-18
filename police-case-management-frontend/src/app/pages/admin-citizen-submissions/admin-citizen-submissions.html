@@ -1,0 +1,166 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h3 class="mb-0">Citizen submissions awaiting review</h3>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <span class="fw-semibold">Sort:</span>
+      <div
+        class="sort-tabs"
+        role="group"
+        aria-label="Sort submissions"
+        [class.is-latest]="sortOrder === 'latest'"
+        [class.is-oldest]="sortOrder === 'oldest'"
+      >
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'latest'"
+          (click)="setSortOrder('latest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Latest</span>
+        </button>
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'oldest'"
+          (click)="setSortOrder('oldest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Oldest</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading submissions"
+    loadingMessage="Fetching cases sent to commissioner..."
+    emptyTitle="No citizen submissions"
+    emptyMessage="No citizen cases are awaiting commissioner review."
+    (retry)="fetchSubmissions()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && groupedSubmissions.length">
+    <ng-container *ngFor="let group of groupedSubmissions; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article *ngFor="let caseItem of group.items; trackBy: trackByCase" class="card mb-3 transfer-request-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+              <h3 class="card-title">
+                <a [routerLink]="['/case', caseItem._id]">
+                  {{ caseItem.case_title || 'Citizen case' }}
+                </a>
+              </h3>
+              <p class="card-text mb-1"><b>Submitted by:</b> {{ submittedBy(caseItem) }}</p>
+              <p class="card-text mb-1"><b>Forwarded by:</b> {{ forwardedBy(caseItem) }}</p>
+              <p class="card-text mb-1"><b>Case type:</b> {{ caseItem.case_type || 'N/A' }}</p>
+              <p class="card-text mb-1"><b>Case date:</b> {{ caseItem.case_date | date: 'dd-MM-yyyy' }}</p>
+              <p class="card-text mb-0 mt-2"><b>Description:</b> {{ caseItem.case_description || 'N/A' }}</p>
+            </div>
+            
+            <button
+              type="button"
+              class="pending-action-btn pending-approve-btn neu-button flex-shrink-0"
+              style="white-space: nowrap;"
+              (click)="openAssignModal(caseItem)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>A</span><span>s</span><span>s</span><span>i</span><span>g</span><span>n</span><span>&nbsp;</span><span>C</span><span>a</span><span>s</span><span>e</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>A</span><span>s</span><span>s</span><span>i</span><span>g</span><span>n</span><span>&nbsp;</span><span>C</span><span>a</span><span>s</span><span>e</span>
+              </span>
+              <span class="visually-hidden">Assign case</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalCases > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="assignModal"
+    class="app-confirm-overlay transfer-modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    (click)="closeAssignModal()"
+  >
+    <div class="app-confirm-card pending-user-surface transfer-modal-card" (click)="$event.stopPropagation()">
+      <h5 class="mb-2">Assign case</h5>
+      <p class="mb-3">
+        Select an active inspector to assign
+        <b>{{ assignModal.caseItem.case_title || 'this case' }}</b>.
+      </p>
+
+      <div *ngIf="loadingInspectors" class="text-muted">Loading active inspectors...</div>
+      <div *ngIf="!loadingInspectors && !activeInspectors.length" class="text-muted">
+        No active inspectors available.
+      </div>
+
+      <div class="transfer-inspector-list" *ngIf="!loadingInspectors && activeInspectors.length">
+        <div class="transfer-inspector-card" *ngFor="let inspector of activeInspectors">
+          <div class="transfer-inspector-main">
+            <div class="transfer-inspector-name">{{ inspector.fullname }}</div>
+            <div class="transfer-inspector-meta">
+              {{ inspector.email }} · {{ inspector.city }} · {{ inspector.police_id || 'N/A' }}
+            </div>
+          </div>
+          <div class="transfer-inspector-stats">
+            <span>Working: {{ inspector.working_cases || 0 }}</span>
+            <span>Completed: {{ inspector.completed_cases || 0 }}</span>
+          </div>
+          <button
+            type="button"
+            class="pending-action-btn pending-approve-btn neu-button"
+            [disabled]="assigningId === inspector._id"
+            (click)="assignInspector(inspector)"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>A</span><span>s</span><span>s</span><span>i</span><span>g</span><span>n</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>A</span><span>s</span><span>s</span><span>i</span><span>g</span><span>n</span>
+            </span>
+            <span class="visually-hidden">Assign</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="app-confirm-actions">
+        <button
+          type="button"
+          class="pending-action-btn pending-check-btn neu-button"
+          [disabled]="assigningId"
+          (click)="closeAssignModal()"
+        >
+          <span class="span-mother" aria-hidden="true"><span>C</span><span>l</span><span>o</span><span>s</span><span>e</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>C</span><span>l</span><span>o</span><span>s</span><span>e</span></span>
+          <span class="visually-hidden">Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

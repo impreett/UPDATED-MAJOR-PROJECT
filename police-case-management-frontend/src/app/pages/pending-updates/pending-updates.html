@@ -1,0 +1,183 @@
+﻿<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <h2 class="mb-0">Pending case updates</h2>
+    <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="totalUpdates > 1">
+      <span class="fw-semibold">Sort:</span>
+      <div class="sort-tabs" role="group" aria-label="Sort cases" [class.is-latest]="sortOrder === 'latest'" [class.is-oldest]="sortOrder === 'oldest'">
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'latest'"
+          (click)="setSortOrder('latest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Latest</span>
+        </button>
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'oldest'"
+          (click)="setSortOrder('oldest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Oldest</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading pending updates"
+    loadingMessage="Fetching update requests..."
+    emptyTitle="No pending updates"
+    emptyMessage="There are no pending update requests right now."
+    (retry)="fetchPendingUpdates()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && totalUpdates > 0">
+    <ng-container *ngFor="let group of groupedUpdates; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article *ngFor="let update of group.items; trackBy: trackByUpdate" class="card mb-3 shadow-sm">
+        <div class="card-body pending-update-layout">
+          <div class="pending-update-meta">
+            <h4 class="mb-2 pending-update-title">
+              {{ update.case_title || originals[update.originalCaseId]?.case_title || 'N/A' }}
+            </h4>
+            <p class="mb-1">
+              <b>Case handler:</b>
+              {{ update.case_handler || originals[update.originalCaseId]?.case_handler || 'N/A' }}
+            </p>
+            <p class="mb-0">
+              <b>Update received:</b>
+              {{ update.requestedAt ? (update.requestedAt | date: 'dd-MM-yyyy HH:mm') : 'N/A' }}
+            </p>
+            <div class="pending-update-changes mt-2">
+              <ng-container *ngIf="changesDoneFor(update?.changes_done) as changesDone">
+                <ng-container *ngIf="changesDone.length; else noChangesDone">
+                  <div class="changes-grid">
+                    <b class="changes-label">Changes:</b>
+                    <div class="changes-values">
+                      <div class="change-line" *ngFor="let item of changesDone">
+                        <span style="white-space: pre-wrap">{{ item }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-template #noChangesDone>
+                <p class="mb-0"><b>Changes:</b> <span class="text-muted">N/A</span></p>
+              </ng-template>
+            </div>
+          </div>
+          <div class="d-flex gap-2 pending-update-actions">
+            <button
+              type="button"
+              class="pending-action-btn pending-approve-btn neu-button"
+              (click)="handleApprove(update, $event)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>A</span><span>p</span><span>p</span><span>r</span><span>o</span><span>v</span><span>e</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>A</span><span>p</span><span>p</span><span>r</span><span>o</span><span>v</span><span>e</span>
+              </span>
+              <span class="visually-hidden">Approve</span>
+            </button>
+            <button
+              type="button"
+              class="pending-action-btn pending-reject-btn neu-button"
+              (click)="handleDeny(update, $event)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span>
+              </span>
+              <span class="visually-hidden">Reject</span>
+            </button>
+            <a
+              class="pending-action-btn pending-check-btn neu-button"
+              [routerLink]="['/commissioner/check-side-by-side', update._id]"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>C</span><span>h</span><span>e</span><span>c</span><span>k</span><span>&nbsp;</span><span>s</span><span>i</span><span>d</span><span>e</span><span>&nbsp;</span><span>b</span><span>y</span><span>&nbsp;</span><span>s</span><span>i</span><span>d</span><span>e</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>C</span><span>h</span><span>e</span><span>c</span><span>k</span><span>&nbsp;</span><span>s</span><span>i</span><span>d</span><span>e</span><span>&nbsp;</span><span>b</span><span>y</span><span>&nbsp;</span><span>s</span><span>i</span><span>d</span><span>e</span>
+              </span>
+              <span class="visually-hidden">Check side by side</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+
+    <div class="list-pagination" *ngIf="totalUpdates > 0">
+      <div class="page-summary">{{ pageSummary }}</div>
+      <div class="page-buttons">
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="prevPage()" [disabled]="currentPage === 1">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+        <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div
+    *ngIf="updateConfirm"
+    class="app-confirm-overlay"
+    role="dialog"
+    aria-modal="true"
+    (click)="closeUpdateConfirm()"
+  >
+    <div class="app-confirm-card pending-user-surface" (click)="$event.stopPropagation()">
+      <h5 class="mb-2">
+        {{ updateConfirm.action === 'approve' ? 'Approve update request?' : 'Reject update request?' }}
+      </h5>
+      <p class="mb-3 app-confirm-text">
+        Are you sure you want to
+        {{ updateConfirm.action === 'approve' ? 'approve' : 'reject' }}
+        the pending update for
+        <b>{{ updateConfirm.title }}</b
+        >?
+      </p>
+      <div class="app-confirm-actions">
+        <button
+          type="button"
+          class="pending-action-btn neu-button"
+          [ngClass]="
+            updateConfirm.action === 'approve' ? 'pending-approve-btn' : 'pending-reject-btn'
+          "
+          [disabled]="isSubmittingAction"
+          (click)="confirmUpdateAction()"
+        >
+          <span class="span-mother" aria-hidden="true"><span>Y</span><span>e</span><span>s</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>Y</span><span>e</span><span>s</span></span>
+          <span class="visually-hidden">Yes</span>
+        </button>
+        <button
+          type="button"
+          class="pending-action-btn pending-check-btn neu-button"
+          [disabled]="isSubmittingAction"
+          (click)="closeUpdateConfirm()"
+        >
+          <span class="span-mother" aria-hidden="true"><span>N</span><span>o</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>N</span><span>o</span></span>
+          <span class="visually-hidden">No</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

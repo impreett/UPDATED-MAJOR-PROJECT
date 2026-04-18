@@ -1,0 +1,193 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h3 class="mb-0">Case Transfer Requests</h3>
+  </div>
+
+  <div role="group" aria-label="Filter requests" class="sort-tabs mb-3" style="--sort-pill-w: 110px;" [class.is-latest]="activeTab === 'pending'" [class.is-oldest]="activeTab === 'transferred'" [class.is-third]="activeTab === 'rejected'">
+    <button type="button" class="sort-btn" (click)="setTab('pending')" [class.active]="activeTab === 'pending'">
+      <span aria-hidden="true" class="neu-text">
+        <span class="neu-text-primary">
+          <span>P</span><span>e</span><span>n</span><span>d</span><span>i</span><span>n</span><span>g</span>
+        </span>
+        <span class="neu-text-secondary">
+          <span>P</span><span>e</span><span>n</span><span>d</span><span>i</span><span>n</span><span>g</span>
+        </span>
+      </span>
+      <span class="visually-hidden">Pending</span>
+    </button>
+    <button type="button" class="sort-btn" (click)="setTab('transferred')" [class.active]="activeTab === 'transferred'">
+      <span aria-hidden="true" class="neu-text">
+        <span class="neu-text-primary">
+          <span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span><span>r</span><span>e</span><span>d</span>
+        </span>
+        <span class="neu-text-secondary">
+          <span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span><span>r</span><span>e</span><span>d</span>
+        </span>
+      </span>
+      <span class="visually-hidden">Transferred</span>
+    </button>
+    <button type="button" class="sort-btn" (click)="setTab('rejected')" [class.active]="activeTab === 'rejected'">
+      <span aria-hidden="true" class="neu-text">
+        <span class="neu-text-primary">
+          <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span><span>e</span><span>d</span>
+        </span>
+        <span class="neu-text-secondary">
+          <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span><span>e</span><span>d</span>
+        </span>
+      </span>
+      <span class="visually-hidden">Rejected</span>
+    </button>
+  </div>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading transfer requests"
+    loadingMessage="Fetching case transfer requests..."
+    emptyTitle="No transfer requests found"
+    [emptyMessage]="activeTab === 'pending' ? 'No pending case transfer requests available.' : (activeTab === 'rejected' ? 'No rejected transfer requests found.' : 'No transferred cases history found.')"
+    (retry)="fetchRequests()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && requests.length">
+    <article *ngFor="let request of pagedRequests" class="card mb-3 transfer-request-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h3 class="card-title">
+              <a [routerLink]="['/case', request.case_id]">
+                {{ request.case_title || 'Untitled case' }}
+              </a>
+            </h3>
+            <p class="card-text mb-1"><b>Case ID:</b> {{ request.case_id }}</p>
+            <p class="card-text mb-1"><b>Requested by:</b> {{ request.from_inspector_name }}</p>
+            <p class="card-text mb-1"><b>Case type:</b> {{ request.case_type || 'N/A' }}</p>
+            <p class="card-text mb-1"><b>Case status:</b> {{ request.case_status || 'N/A' }}</p>
+            <p class="card-text mb-0 mt-2"><b>Reason:</b> {{ request.reason }}</p>
+            
+            <p class="card-text mt-2 mb-0" *ngIf="statusLabel(request) !== 'PENDING'">
+              <ng-container *ngIf="statusLabel(request) === 'APPROVED'">
+                <span class="text-success fw-bold">
+                  Transferred from {{ request.from_inspector_name }} to {{ request.to_inspector_name }} on {{ (request.resolved_at || request.updatedAt) | date:'longDate' }}
+                </span>
+              </ng-container>
+              <ng-container *ngIf="statusLabel(request) === 'REJECTED'">
+                <span class="text-danger fw-bold">
+                  Transfer request from {{ request.from_inspector_name }} was rejected on {{ (request.resolved_at || request.updatedAt) | date:'longDate' }}
+                </span>
+              </ng-container>
+            </p>
+          </div>
+
+          <div class="d-flex gap-2 flex-shrink-0" *ngIf="statusLabel(request) === 'PENDING'">
+            <button
+              type="button"
+              class="pending-action-btn pending-approve-btn neu-button"
+              style="white-space: nowrap;"
+              (click)="openTransferModal(request)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span>
+              </span>
+              <span class="visually-hidden">Transfer case</span>
+            </button>
+            <button
+              type="button"
+              class="pending-action-btn pending-reject-btn neu-button"
+              style="white-space: nowrap;"
+              (click)="rejectRequest(request)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span>
+              </span>
+              <span class="visually-hidden">Reject request</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalCases > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="transferModal"
+    class="app-confirm-overlay transfer-modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    (click)="closeTransferModal()"
+  >
+    <div class="app-confirm-card pending-user-surface transfer-modal-card" (click)="$event.stopPropagation()">
+      <h5 class="mb-2">Transfer case</h5>
+      <p class="mb-3">
+        Select an active inspector to transfer
+        <b>{{ transferModal.request.case_title || 'this case' }}</b>.
+      </p>
+
+      <div *ngIf="loadingInspectors" class="text-muted">Loading active inspectors...</div>
+      <div *ngIf="!loadingInspectors && !activeInspectors.length" class="text-muted">
+        No active inspectors available.
+      </div>
+
+      <div class="transfer-inspector-list" *ngIf="!loadingInspectors && activeInspectors.length">
+        <div class="transfer-inspector-card" *ngFor="let inspector of activeInspectors">
+          <div class="transfer-inspector-main">
+            <div class="transfer-inspector-name">{{ inspector.fullname }}</div>
+            <div class="transfer-inspector-meta">
+              {{ inspector.email }} · {{ inspector.city }} · {{ inspector.police_id || 'N/A' }}
+            </div>
+          </div>
+          <div class="transfer-inspector-stats">
+            <span>Working: {{ inspector.working_cases || 0 }}</span>
+            <span>Completed: {{ inspector.completed_cases || 0 }}</span>
+          </div>
+          <button
+            type="button"
+            class="pending-action-btn pending-approve-btn neu-button"
+            [disabled]="assigningId === inspector._id"
+            (click)="assignTransfer(inspector)"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span>
+            </span>
+            <span class="visually-hidden">Transfer</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="app-confirm-actions">
+        <button
+          type="button"
+          class="pending-action-btn pending-check-btn neu-button"
+          [disabled]="assigningId"
+          (click)="closeTransferModal()"
+        >
+          <span class="span-mother" aria-hidden="true"><span>C</span><span>l</span><span>o</span><span>s</span><span>e</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>C</span><span>l</span><span>o</span><span>s</span><span>e</span></span>
+          <span class="visually-hidden">Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

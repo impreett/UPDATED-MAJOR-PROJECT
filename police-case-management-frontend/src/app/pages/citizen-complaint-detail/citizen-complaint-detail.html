@@ -1,0 +1,132 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h3 class="mb-0">Complaint Details</h3>
+    <a routerLink="/citizen/complaints" class="pending-action-btn pending-check-btn neu-button">
+      Back to list
+    </a>
+  </div>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="!loading && !errorMessage && !complaint"
+    loadingTitle="Loading complaint"
+    loadingMessage="Fetching the complaint details..."
+    emptyTitle="Complaint not found"
+    emptyMessage="We could not find that complaint."
+    (retry)="fetchComplaint()"
+  ></app-state-panel>
+
+  <article *ngIf="!loading && !errorMessage && complaint" class="card complaint-detail-card case-details-card">
+    <div class="card-body">
+      <h2 class="mb-4 complaint-title">Complaint against {{ complaint.inspector_name }} ({{ complaint.inspector_police_id }})</h2>
+      <hr class="case-title-divider" />
+
+      <p class="detail-row">
+        <span class="detail-label"><b>Complaint ID:</b></span>
+        <span class="detail-value">{{ complaint._id }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Inspector:</b></span>
+        <span class="detail-value">{{ complaint.inspector_name }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Badge ID:</b></span>
+        <span class="detail-value">{{ complaint.inspector_police_id || 'N/A' }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Inspector City:</b></span>
+        <span class="detail-value">{{ complaint.inspector_city }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Submitted by:</b></span>
+        <span class="detail-value">{{ complaint.citizen_name || 'You' }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Submitted:</b></span>
+        <span class="detail-value">{{ complaint.createdAt | date: 'dd-MM-yyyy HH:mm' }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Status:</b></span>
+        <span class="detail-value">{{ displayStatus(complaint) }}</span>
+      </p>
+      <p class="detail-row" *ngIf="actionTaken(complaint) as actionTaken">
+        <span class="detail-label"><b>Action taken:</b></span>
+        <span class="detail-value">{{ actionTaken }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Evidence:</b></span>
+        <span class="detail-value">{{ evidenceSummary() }}</span>
+      </p>
+      <p class="detail-row desc-row">
+        <span class="detail-label"><b>Reason:</b></span>
+        <span class="detail-value desc-value-bg">{{ complaint.reason }}</span>
+      </p>
+
+      <div class="detail-row evidence-row" *ngIf="evidenceEntries.length">
+        <span class="detail-label"><b>Evidence:</b></span>
+        <span class="detail-value">
+          <div class="evidence-list">
+            <div class="evidence-item" *ngFor="let evidence of evidenceEntries">
+              <div class="evidence-name">
+                <b>Evidence Name:</b> {{ evidence.evidence_name || 'Evidence' }}
+              </div>
+              <div class="evidence-file">
+                <div class="evidence-file-label"><b>Evidence File:</b></div>
+
+                <ng-container *ngIf="isImageEvidence(evidence); else notImageEvidence">
+                  <a class="evidence-link" [href]="evidenceUrl(evidence)" target="_blank" rel="noopener">
+                    <img
+                      class="evidence-image"
+                      [src]="evidenceUrl(evidence)"
+                      [alt]="evidence.evidence_name || 'Evidence'"
+                      loading="lazy"
+                    />
+                  </a>
+                </ng-container>
+
+                <ng-template #notImageEvidence>
+                  <ng-container *ngIf="isVideoEvidence(evidence); else genericEvidence">
+                    <video class="evidence-video" controls preload="metadata">
+                      <source [src]="evidenceUrl(evidence)" [type]="evidenceType(evidence)" />
+                    </video>
+                    <div>
+                      <a class="evidence-link" [href]="evidenceUrl(evidence)" target="_blank" rel="noopener">
+                        Open video
+                      </a>
+                    </div>
+                  </ng-container>
+                </ng-template>
+
+                <ng-template #genericEvidence>
+                  <a class="evidence-link" [href]="evidenceUrl(evidence)" target="_blank" rel="noopener">
+                    Download / open file
+                  </a>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+
+      <div class="complaint-actions">
+        <a
+          [routerLink]="['/citizen/complaints', complaint._id, 'edit']"
+          class="pending-action-btn pending-approve-btn neu-button"
+          *ngIf="canEdit"
+        >
+          Edit / Add evidence
+        </a>
+        <button
+          *ngIf="canWithdraw"
+          type="button"
+          class="pending-action-btn pending-reject-btn neu-button"
+          (click)="withdrawComplaint()"
+          [disabled]="acting"
+        >
+          Withdraw
+        </button>
+      </div>
+    </div>
+  </article>
+</div>

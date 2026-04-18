@@ -1,0 +1,23 @@
+.layout-root {
+  background: #f1f1f1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.layout-root > app-footer {
+  margin-top: auto;
+}
+
+/* Keep footer pinned by letting routed page hosts fill remaining space. */
+.layout-main > *:not(router-outlet) {
+  flex: 1 1 auto;
+  min-height: 0;
+}

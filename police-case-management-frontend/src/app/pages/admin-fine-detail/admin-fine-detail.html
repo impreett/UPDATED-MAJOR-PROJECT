@@ -1,0 +1,332 @@
+<div class="container mt-4">
+  <a routerLink="/commissioner/manage-fine" class="pending-action-btn pending-check-btn neu-button">
+    <span class="span-mother" aria-hidden="true">
+      <span>←</span><span>&nbsp;</span><span>B</span><span>a</span><span>c</span><span>k</span><span>&nbsp;</span><span>t</span><span>o</span><span>&nbsp;</span><span>f</span><span>i</span><span>n</span><span>e</span><span>s</span>
+    </span>
+    <span class="span-mother2" aria-hidden="true">
+      <span>←</span><span>&nbsp;</span><span>B</span><span>a</span><span>c</span><span>k</span><span>&nbsp;</span><span>t</span><span>o</span><span>&nbsp;</span><span>f</span><span>i</span><span>n</span><span>e</span><span>s</span>
+    </span>
+    <span class="visually-hidden">Back to fines</span>
+  </a>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="!loading && !errorMessage && !fine"
+    loadingTitle="Loading fine..."
+    loadingMessage="Fetching fine details. Please wait."
+    emptyTitle="Fine not found"
+    emptyMessage="We could not find that fine."
+  ></app-state-panel>
+
+  <article *ngIf="!loading && !errorMessage && fine" class="card fine-detail-card mt-3">
+    <div class="card-body">
+      <div class="fine-card-header">
+        <h3 class="card-title fine-reason-title">{{ fine.reason }}</h3>
+        <span class="fine-status-chip" [class.is-paid]="isPaid(fine)">{{ statusLabel(fine) }}</span>
+      </div>
+
+      <div class="fine-meta">
+        <p class="detail-row">
+          <span class="detail-label"><b>Amount (₹):</b></span>
+          <span class="detail-value">₹{{ fine.amount }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Status:</b></span>
+          <span class="detail-value">{{ statusLabel(fine) }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Issued:</b></span>
+          <span class="detail-value">{{ fine.createdAt | date: 'dd-MM-yyyy HH:mm' }}</span>
+        </p>
+        <p class="detail-row" *ngIf="fine.paid_at">
+          <span class="detail-label"><b>Paid:</b></span>
+          <span class="detail-value">{{ fine.paid_at | date: 'dd-MM-yyyy HH:mm' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Issued by:</b></span>
+          <span class="detail-value">{{ fine.issued_by_name || 'Inspector' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Citizen:</b></span>
+          <span class="detail-value">{{ fine.person_name || 'N/A' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Age:</b></span>
+          <span class="detail-value">{{ fine.person_age || 'N/A' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Mobile:</b></span>
+          <span class="detail-value">{{ fine.mobile_number || 'N/A' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Email:</b></span>
+          <span class="detail-value">{{ fine.email || 'N/A' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Aadhar card number:</b></span>
+          <span class="detail-value">{{ formatAadhar(fine.aadhar_number) }}</span>
+        </p>
+        <p class="detail-row reason-row">
+          <span class="detail-label"><b>Reason:</b></span>
+          <span class="detail-value reason-value">{{ fine.reason || 'N/A' }}</span>
+        </p>
+      </div>
+
+      <div class="detail-row evidence-row">
+        <span class="detail-label evidence-label"><b>Evidence:</b></span>
+        <span class="detail-value">
+          <ng-container *ngIf="evidenceDisplay.length; else noEvidence">
+            <div class="evidence-list">
+              <div class="evidence-item" *ngFor="let evidence of evidenceDisplay; let i = index">
+                <div class="evidence-name">
+                  <b>Evidence Name:</b> {{ evidence.name }}
+                </div>
+                <div class="evidence-file">
+                  <div class="evidence-file-label"><b>Evidence File:</b></div>
+
+                  <ng-container *ngIf="isImageEvidence(evidence); else notImageEvidence">
+                    <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                      <img class="evidence-image" [src]="evidence.url" [alt]="evidence.name" loading="lazy" />
+                    </a>
+                  </ng-container>
+
+                  <ng-template #notImageEvidence>
+                    <ng-container *ngIf="isVideoEvidence(evidence); else genericEvidence">
+                      <video class="evidence-video" controls preload="metadata">
+                        <source [src]="evidence.url" [type]="evidence.fileType" />
+                      </video>
+                      <div>
+                        <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                          Open video
+                        </a>
+                      </div>
+                    </ng-container>
+                  </ng-template>
+
+                  <ng-template #genericEvidence>
+                    <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                      Download / open file
+                    </a>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noEvidence>
+            <span class="text-muted">No evidence available.</span>
+          </ng-template>
+        </span>
+      </div>
+
+      <div class="fine-actions" *ngIf="!isPaid(fine)">
+        <button
+          type="button"
+          class="pending-action-btn pending-check-btn neu-button"
+          *ngIf="!editing"
+          (click)="startEdit()"
+        >
+          <span class="span-mother" aria-hidden="true">
+            <span>E</span><span>d</span><span>i</span><span>t</span>
+          </span>
+          <span class="span-mother2" aria-hidden="true">
+            <span>E</span><span>d</span><span>i</span><span>t</span>
+          </span>
+          <span class="visually-hidden">Edit</span>
+        </button>
+        <button
+          type="button"
+          class="pending-action-btn pending-reject-btn neu-button"
+          [disabled]="deleting"
+          (click)="forgiveFine()"
+        >
+          <span class="span-mother" aria-hidden="true">
+            <span>F</span><span>o</span><span>r</span><span>g</span><span>i</span><span>v</span><span>e</span>
+          </span>
+          <span class="span-mother2" aria-hidden="true">
+            <span>F</span><span>o</span><span>r</span><span>g</span><span>i</span><span>v</span><span>e</span>
+          </span>
+          <span class="visually-hidden">Forgive</span>
+        </button>
+      </div>
+
+      <form
+        *ngIf="editing && !isPaid(fine)"
+        [formGroup]="editForm"
+        class="fine-edit-form"
+        (ngSubmit)="saveEdit()"
+      >
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label required">Citizen name</label>
+            <input type="text" class="form-control" formControlName="person_name" />
+            <div class="text-danger small" *ngIf="editErrors.person_name">
+              {{ editErrors.person_name }}
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label required">Age</label>
+            <input type="number" min="18" max="110" class="form-control" formControlName="person_age" />
+            <div class="text-danger small" *ngIf="editErrors.person_age">
+              {{ editErrors.person_age }}
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label required">Amount (₹)</label>
+            <input type="number" class="form-control" formControlName="amount" min="100" max="25000" />
+            <div class="text-danger small" *ngIf="editErrors.amount">
+              {{ editErrors.amount }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label required">Mobile number</label>
+            <input type="text" class="form-control" formControlName="mobile_number" />
+            <div class="text-danger small" *ngIf="editErrors.mobile_number">
+              {{ editErrors.mobile_number }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label required">Aadhar card number</label>
+            <input type="text" class="form-control" formControlName="aadhar_number" />
+            <div class="text-danger small" *ngIf="editErrors.aadhar_number">
+              {{ editErrors.aadhar_number }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label required">Email</label>
+            <input type="email" class="form-control" formControlName="email" />
+            <div class="text-danger small" *ngIf="editErrors.email">
+              {{ editErrors.email }}
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label required">Reason</label>
+            <textarea rows="2" class="form-control" formControlName="reason"></textarea>
+            <div class="text-danger small" *ngIf="editErrors.reason">
+              {{ editErrors.reason }}
+            </div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label required">Evidence entries</label>
+            <div class="text-muted small mb-2">
+              Images or videos only. Max {{ maxEvidenceFileSizeMb }}MB.
+            </div>
+            <div class="evidence-editor-list">
+              <div
+                *ngFor="let evidence of evidenceEntries; let i = index; trackBy: trackByEvidenceIndex"
+                class="evidence-editor-row"
+              >
+                <div class="row g-2 align-items-start flex-nowrap evidence-editor-inputs">
+                  <div class="col-5">
+                    <label class="form-label required">Evidence name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [value]="evidence.evidence_name"
+                      [class.is-invalid]="!!getEvidenceError(i, 'evidence_name')"
+                      (input)="onEvidenceNameChange(i, $any($event.target).value)"
+                    />
+                  </div>
+                  <div class="col-5">
+                    <label class="form-label required">Evidence file</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      accept="image/*,video/*"
+                      [class.is-invalid]="!!getEvidenceError(i, 'evidence_file')"
+                      (change)="onEvidenceFileChange(i, $event)"
+                      #evidenceFileInput
+                    />
+                    <div *ngIf="evidence.existing_file_url" class="evidence-existing-link mt-2">
+                      <a [href]="evidence.existing_file_url" target="_blank" rel="noopener">
+                        View evidence
+                      </a>
+                    </div>
+                    <div *ngIf="evidence.evidence_file" class="file-meta mt-2">
+                      <span class="file-chip"><strong>Selected:</strong> {{ evidenceFileLabel(evidence) }}</span>
+                      <button
+                        type="button"
+                        class="pending-action-btn pending-check-btn neu-button"
+                        (click)="clearEvidenceFile(i, evidenceFileInput)"
+                      >
+                        <span class="span-mother" aria-hidden="true">
+                          <span>C</span><span>l</span><span>e</span><span>a</span><span>r</span>
+                        </span>
+                        <span class="span-mother2" aria-hidden="true">
+                          <span>C</span><span>l</span><span>e</span><span>a</span><span>r</span>
+                        </span>
+                        <span class="visually-hidden">Clear file</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-2 d-flex align-items-start">
+                    <button
+                      type="button"
+                      class="pending-action-btn pending-reject-btn neu-button w-100"
+                      (click)="removeEvidence(i, evidenceFileInput)"
+                    >
+                      <span class="span-mother" aria-hidden="true">
+                        <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span>
+                      </span>
+                      <span class="span-mother2" aria-hidden="true">
+                        <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span>
+                      </span>
+                      <span class="visually-hidden">Remove evidence</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="row g-2 flex-nowrap evidence-editor-meta">
+                  <div class="col-5">
+                    <div *ngIf="getEvidenceError(i, 'evidence_name')" class="invalid-feedback d-block">
+                      {{ getEvidenceError(i, 'evidence_name') }}
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div *ngIf="getEvidenceError(i, 'evidence_file')" class="invalid-feedback d-block">
+                      {{ getEvidenceError(i, 'evidence_file') }}
+                    </div>
+                  </div>
+                  <div class="col-2"></div>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="pending-action-btn pending-check-btn neu-button mt-3"
+              (click)="addEvidence()"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>E</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>E</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+              </span>
+              <span class="visually-hidden">Add evidence</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="fine-edit-actions">
+          <button type="submit" class="pending-action-btn pending-approve-btn neu-button" [disabled]="saving">
+            <span class="span-mother" aria-hidden="true">
+              <span>S</span><span>a</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>h</span><span>a</span><span>n</span><span>g</span><span>e</span><span>s</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>S</span><span>a</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>h</span><span>a</span><span>n</span><span>g</span><span>e</span><span>s</span>
+            </span>
+            <span class="visually-hidden">Save changes</span>
+          </button>
+          <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="cancelEdit()">
+            <span class="span-mother" aria-hidden="true">
+              <span>C</span><span>a</span><span>n</span><span>c</span><span>e</span><span>l</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>C</span><span>a</span><span>n</span><span>c</span><span>e</span><span>l</span>
+            </span>
+            <span class="visually-hidden">Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </article>
+</div>

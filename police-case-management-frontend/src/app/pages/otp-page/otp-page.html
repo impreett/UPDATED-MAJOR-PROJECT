@@ -1,0 +1,74 @@
+<div class="public-page-shell otp-page-shell">
+  <header
+    class="d-flex align-items-center justify-content-center p-3"
+    style="background-color: #000; color: white"
+  >
+    <img src="/assets/logo.png" alt="Logo" class="public-header-logo" />
+    <h1>Police Case Management</h1>
+  </header>
+  <div class="public-page-content otp-page-content">
+    <div class="container py-5">
+      <h2 class="text-center mb-4">OTP verification</h2>
+      <div class="col-md-8 col-lg-6 mx-auto">
+        <div class="card otp-form-card shadow">
+          <div class="card-body p-4 p-md-5">
+            <form [formGroup]="otpForm" (ngSubmit)="onVerify()" novalidate>
+              <p *ngIf="infoMessage" class="otp-status otp-status-info">
+                {{ infoMessage }}
+              </p>
+              <div class="mb-3">
+                <label class="form-label required">OTP</label>
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="6"
+                  class="form-control"
+                  [class.is-invalid]="errors.otp"
+                  formControlName="otp"
+                  placeholder="Enter 6-digit OTP"
+                />
+                <div *ngIf="errors.otp" class="invalid-feedback">{{ errors.otp }}</div>
+              </div>
+              <p class="otp-resend-row">
+                Didn't get OTP?
+                <a
+                  href="#"
+                  (click)="onResendOtp($event)"
+                  [class.disabled]="isResending || resendCooldown > 0"
+                >
+                  Resend OTP
+                </a>
+                <span *ngIf="resendCooldown > 0" class="otp-cooldown">({{ resendCooldown }}s)</span>
+              </p>
+              <p>Need to update details? <a routerLink="/register">Go back to register</a>.</p>
+              <button
+                type="submit"
+                class="pending-action-btn pending-check-btn neu-button w-100 mt-3"
+                [disabled]="loading || !email"
+              >
+                <span aria-hidden="true" class="span-mother">
+                  <span>V</span>
+                  <span>e</span>
+                  <span>r</span>
+                  <span>i</span>
+                  <span>f</span>
+                  <span>y</span>
+                </span>
+                <span aria-hidden="true" class="span-mother2">
+                  <span>V</span>
+                  <span>e</span>
+                  <span>r</span>
+                  <span>i</span>
+                  <span>f</span>
+                  <span>y</span>
+                </span>
+                <span class="visually-hidden">Verify</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

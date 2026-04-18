@@ -1,0 +1,268 @@
+.fine-detail-card {
+  border-radius: 12px;
+  border: 1px solid #d8e2ef;
+}
+
+.fine-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fine-reason-title {
+  margin: 0;
+  flex: 1 1 240px;
+}
+
+.fine-meta {
+  margin-top: 8px;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: minmax(170px, max-content) minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.detail-label {
+  white-space: nowrap;
+  color: #586a7e;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.detail-value {
+  word-break: break-word;
+  color: #1b2b45;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.reason-row {
+  align-items: start;
+}
+
+.reason-value {
+  display: block;
+  background: #f3f5f8;
+  border: 1px solid #e0e5eb;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: #1b2b45;
+}
+
+.fine-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: #fff3dc;
+  color: #8a5b00;
+  border: 1px solid #f2d7a7;
+}
+
+.fine-status-chip.is-paid {
+  background: #e7f6ef;
+  color: #1f6a3f;
+  border-color: #bfe4cf;
+}
+
+.fine-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fine-edit-form {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f7f9fc;
+  border: 1px solid #e3e9f2;
+}
+
+.evidence-row {
+  margin-top: 12px;
+}
+
+.evidence-label {
+  align-self: start;
+  padding-top: 2px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+.evidence-item {
+  background: #ffffff;
+  border: 1px solid #e0e5eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.evidence-name {
+  margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+
+.evidence-name b,
+.evidence-file-label b {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.evidence-file-label {
+  margin-bottom: 6px;
+}
+
+.evidence-link {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.evidence-link:hover {
+  text-decoration: underline;
+}
+
+.evidence-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.evidence-video {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #000;
+}
+
+.evidence-editor-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-editor-row {
+  border: 1px solid #dde6f1;
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+.evidence-editor-row .row {
+  flex-wrap: nowrap;
+}
+
+.evidence-editor-inputs {
+  align-items: flex-start !important;
+}
+
+.evidence-editor-inputs .col-2 {
+  align-items: flex-start !important;
+  padding-top: 1.75rem;
+}
+
+.evidence-editor-meta {
+  margin-top: 6px;
+}
+
+.evidence-existing-link a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.evidence-existing-link a:hover {
+  text-decoration: underline;
+}
+
+.fine-edit-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+:host-context(body.dark-mode) .fine-detail-card {
+  background: #1f2c3a;
+  border-color: #344a60;
+}
+
+:host-context(body.dark-mode) .fine-detail-card .card-body,
+:host-context(body.dark-mode) .fine-detail-card p {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .detail-label {
+  color: #a9b9cb;
+}
+
+:host-context(body.dark-mode) .detail-value {
+  color: #e7f0fb;
+}
+
+:host-context(body.dark-mode) .reason-value {
+  background: #182330;
+  border-color: #31455a;
+  color: #e7f0fb;
+}
+
+:host-context(body.dark-mode) .fine-status-chip {
+  background: #2b2417;
+  border-color: #5b4323;
+  color: #f5d49a;
+}
+
+:host-context(body.dark-mode) .fine-status-chip.is-paid {
+  background: #1a2c21;
+  border-color: #2f563a;
+  color: #bfe8c9;
+}
+
+:host-context(body.dark-mode) .fine-edit-form {
+  background: #182330;
+  border-color: #31455a;
+}
+
+:host-context(body.dark-mode) .evidence-list {
+  background: #182330;
+  border-color: #31455a;
+}
+
+:host-context(body.dark-mode) .evidence-item {
+  background: #1f2c3a;
+  border-color: #344a60;
+}
+
+:host-context(body.dark-mode) .evidence-editor-row {
+  background: #141d29;
+  border-color: #33465c;
+}
+
+@media (max-width: 576px) {
+  .detail-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 4px;
+  }
+}

@@ -1,0 +1,94 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h3 class="mb-0">Request Case Transfer</h3>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <span class="fw-semibold">Sort:</span>
+      <div class="sort-tabs" role="group" aria-label="Sort cases" [class.is-latest]="sortOrder === 'latest'" [class.is-oldest]="sortOrder === 'oldest'">
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'latest'"
+          (click)="setSortOrder('latest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Latest</span>
+        </button>
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'oldest'"
+          (click)="setSortOrder('oldest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Oldest</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading cases"
+    loadingMessage="Fetching your assigned cases..."
+    emptyTitle="No assigned cases"
+    emptyMessage="There are no active, approved cases assigned to you right now."
+    (retry)="fetchData()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && groupedCases.length">
+    <ng-container *ngFor="let group of groupedCases; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article *ngFor="let caseItem of group.items; trackBy: trackByCase" class="card mb-3 transfer-card">
+        <div class="card-body">
+          <div class="transfer-card-header">
+            <h4 class="card-title mb-0">
+              <a [routerLink]="['/case', caseItem._id]">{{ caseItem.case_title }}</a>
+            </h4>
+            <!-- Status badge removed as requested -->
+          </div>
+
+          <p class="card-text mb-1"><b>Case Type:</b> {{ caseItem.case_type }}</p>
+          <p class="card-text mb-1"><b>Status:</b> {{ caseItem.status }}</p>
+          <p class="card-text mb-1"><b>Case Date:</b> {{ caseItem.case_date | date: 'dd-MM-yyyy' }}</p>
+          <p class="card-text mt-2 mb-3" *ngIf="caseItem.case_description" style="white-space: pre-wrap;"><b>Description:</b> {{ caseItem.case_description }}</p>
+
+          <button
+            type="button"
+            class="pending-action-btn pending-approve-btn neu-button"
+            [disabled]="requestingId === caseItem._id || requestStatus(caseItem) === 'PENDING'"
+            (click)="requestTransfer(caseItem)"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>R</span><span>e</span><span>q</span><span>u</span><span>e</span><span>s</span><span>t</span><span>&nbsp;</span><span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>R</span><span>e</span><span>q</span><span>u</span><span>e</span><span>s</span><span>t</span><span>&nbsp;</span><span>T</span><span>r</span><span>a</span><span>n</span><span>s</span><span>f</span><span>e</span><span>r</span>
+            </span>
+            <span class="visually-hidden">Request transfer</span>
+          </button>
+        </div>
+      </article>
+    </ng-container>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalCases > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+</div>

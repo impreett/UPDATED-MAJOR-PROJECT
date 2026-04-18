@@ -1,0 +1,67 @@
+.form-select,
+.form-control {
+  border-radius: 10px;
+}
+
+.report-inspector-form {
+  border: 1px solid #d8e2ef;
+  border-radius: 16px;
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.evidence-editor-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-editor-row {
+  border: 1px solid #dde6f1;
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+.evidence-editor-row .row {
+  flex-wrap: nowrap;
+}
+
+.evidence-editor-meta {
+  margin-top: 6px;
+}
+
+.evidence-editor-inputs {
+  align-items: flex-start !important;
+}
+
+.evidence-editor-inputs .col-2 {
+  align-items: flex-start !important;
+  padding-top: 1.75rem;
+}
+
+.evidence-existing-link a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.evidence-existing-link a:hover {
+  text-decoration: underline;
+}
+
+:host-context(body.dark-mode) .evidence-editor-row {
+  background: #141d29;
+  border-color: #33465c;
+}
+
+:host-context(body.dark-mode) .report-inspector-form {
+  background: #1f2c3a;
+  border-color: #344a60;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 768px) {
+  .report-inspector-form {
+    padding: 16px;
+  }
+}

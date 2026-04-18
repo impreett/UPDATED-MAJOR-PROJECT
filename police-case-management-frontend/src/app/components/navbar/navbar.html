@@ -1,0 +1,165 @@
+<aside class="sidebar" *ngIf="user">
+  <nav>
+    <ng-container [ngSwitch]="role">
+      <ng-container *ngSwitchCase="'commissioner'">
+        <a
+          routerLink="/commissioner/home"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item-link"
+        >
+          <img src="/assets/home_icon.png" alt="Home" />
+          <span>Home</span>
+        </a>
+        <a routerLink="/commissioner/add-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/add_icon.png" alt="Add case" />
+          <span>Add case</span>
+        </a>
+        <a routerLink="/commissioner/search-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/search_icon.png" alt="Search case" />
+          <span>Search case</span>
+        </a>
+        <a routerLink="/commissioner/update-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/update_icon.png" alt="Update case" />
+          <span>Update case</span>
+        </a>
+        <a routerLink="/commissioner/pending-updates" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/pending_update_case_icon.png" alt="Pending updates" />
+          <span>Pending updates</span>
+        </a>
+        <a routerLink="/commissioner/remove-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/remove_case.png" alt="Remove case" />
+          <span>Remove case</span>
+        </a>
+        <a routerLink="/commissioner/manage-fine" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/Manage%20fine.png" alt="Manage fine" />
+          <span>Manage fine</span>
+        </a>
+        <a routerLink="/commissioner/removed-cases" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/removed_case_icon.png" alt="Removed cases" />
+          <span>Removed cases</span>
+        </a>
+        <a routerLink="/commissioner/pending-cases" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/pending_case_icon.png" alt="Pending cases" />
+          <span>Pending cases</span>
+        </a>
+        <a routerLink="/commissioner/citizen-submissions" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/pending_case_icon.png" alt="Citizen submissions" />
+          <span>Citizen submissions</span>
+        </a>
+        <a
+          routerLink="/commissioner/suspended-inspectors"
+          routerLinkActive="active"
+          class="nav-item-link"
+        >
+          <img src="/assets/suspended-Photoroom.png" alt="Suspended inspectors" />
+          <span>Suspended inspectors</span>
+        </a>
+        <a routerLink="/commissioner/active-inspectors" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/active_users_icon.png" alt="Active inspectors" />
+          <span>Active inspectors</span>
+        </a>
+        <a
+          routerLink="/commissioner/case-transfer-requests"
+          routerLinkActive="active"
+          class="nav-item-link"
+        >
+          <img src="/assets/transfer.png" alt="Case transfer requests" />
+          <span>Case transfer requests</span>
+        </a>
+        <a
+          routerLink="/commissioner/inspector-compliance"
+          routerLinkActive="active"
+          class="nav-item-link"
+        >
+          <img src="/assets/police%20complaint.png" alt="Inspector compliance" />
+          <span>Inspector compliance</span>
+        </a>
+        <a routerLink="/commissioner/reports" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/reports.png" alt="Reports" />
+          <span>Reports</span>
+        </a>
+        <a routerLink="/settings" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/setting.png" alt="Settings" />
+          <span>Settings</span>
+        </a>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'citizen'">
+        <a routerLink="/citizen/submit-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/add_icon.png" alt="Submit case" />
+          <span>Submit case</span>
+        </a>
+        <a routerLink="/citizen/case-status" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/pending_case_icon.png" alt="Case status" />
+          <span>Case status</span>
+        </a>
+        <a routerLink="/citizen/report-inspector" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/police%20complaint.png" alt="Report inspector" />
+          <span>Report inspector</span>
+        </a>
+        <a routerLink="/citizen/complaints" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/police%20complaint.png" alt="My complaints" />
+          <span>My complaints</span>
+        </a>
+        <a routerLink="/citizen/pay-fine" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/Manage%20fine.png" alt="Pay fine" />
+          <span>Pay fine</span>
+        </a>
+        <a routerLink="/settings" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/setting.png" alt="Settings" />
+          <span>Settings</span>
+        </a>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <a
+          routerLink="/inspector/home"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item-link"
+        >
+          <img src="/assets/home_icon.png" alt="Home" />
+          <span>Home</span>
+        </a>
+        <a routerLink="/inspector/add-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/add_icon.png" alt="Add case" />
+          <span>Add case</span>
+        </a>
+        <a routerLink="/inspector/search-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/search_icon.png" alt="Search case" />
+          <span>Search case</span>
+        </a>
+        <a routerLink="/inspector/update-case" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/update_icon.png" alt="Update case" />
+          <span>Update case</span>
+        </a>
+        <a routerLink="/inspector/issue-fine" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/Manage%20fine.png" alt="Issue fine" />
+          <span>Issue fine</span>
+        </a>
+        <a
+          routerLink="/inspector/request-case-transfer"
+          routerLinkActive="active"
+          class="nav-item-link"
+        >
+          <img src="/assets/transfer.png" alt="Request case transfer" />
+          <span>Request case transfer</span>
+        </a>
+        <a routerLink="/inspector/citizen-submissions" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/pending_case_icon.png" alt="Citizen submissions" />
+          <span>Citizen submissions</span>
+        </a>
+        <a routerLink="/inspector/report" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/reports.png" alt="Report" />
+          <span>Report</span>
+        </a>
+        <a routerLink="/settings" routerLinkActive="active" class="nav-item-link">
+          <img src="/assets/setting.png" alt="Settings" />
+          <span>Settings</span>
+        </a>
+      </ng-container>
+    </ng-container>
+
+  </nav>
+</aside>

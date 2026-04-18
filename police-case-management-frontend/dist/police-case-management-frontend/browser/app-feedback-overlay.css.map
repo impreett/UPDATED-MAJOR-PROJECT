@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/app-feedback-overlay/app-feedback-overlay.css"],
+  "sourcesContent": [".app-feedback-message-wrap {\n  position: fixed;\n  left: 50%;\n  transform: translateX(-50%);\n  width: min(680px, calc(100% - 24px));\n  z-index: 1350;\n  pointer-events: none;\n}\n\n.app-feedback-message {\n  margin: 0;\n  pointer-events: auto;\n}\n\n.app-confirm-overlay {\n  z-index: 1400;\n}\n\n.app-confirm-input {\n  margin-bottom: 16px;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,YAAU;AACV,QAAM;AACN,aAAW,WAAW;AACtB,SAAO,IAAI,KAAK,EAAE,KAAK,KAAK,EAAE;AAC9B,WAAS;AACT,kBAAgB;AAClB;AAEA,CAAC;AACC,UAAQ;AACR,kBAAgB;AAClB;AAEA,CAAC;AACC,WAAS;AACX;AAEA,CAAC;AACC,iBAAe;AACjB;",
+  "names": []
+}

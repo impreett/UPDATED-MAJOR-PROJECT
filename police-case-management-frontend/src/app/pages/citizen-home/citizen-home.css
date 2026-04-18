@@ -1,0 +1,105 @@
+.month-year-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.month-year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #c7ced6;
+}
+
+.tabs {
+  --filter-gap: 0.14rem;
+  --filter-all-w: calc(3ch + 1.2rem);
+  --filter-recent-w: calc(16ch + 1.2rem);
+  --filter-updated-w: calc(7ch + 1.2rem);
+  --filter-all-x: var(--segmented-control-pad);
+  --filter-recent-x: calc(var(--filter-all-x) + var(--filter-all-w) + var(--filter-gap));
+  --filter-updated-x: calc(var(--filter-recent-x) + var(--filter-recent-w) + var(--filter-gap));
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  background-color: #e0e0e0;
+  border: 2px solid #cecece;
+  box-shadow: inset 4px 4px 10px #bcbcbc, inset -4px -4px 10px #ffffff;
+  padding: var(--segmented-control-pad);
+  height: var(--segmented-control-wrap-h);
+  min-height: var(--segmented-control-wrap-h);
+  border-radius: 999px;
+  overflow: visible;
+  width: fit-content;
+  gap: var(--filter-gap);
+  box-sizing: border-box;
+}
+
+.filter-tabs input[type='radio'] {
+  display: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--segmented-control-h);
+  width: auto;
+  padding: 0 0.6rem;
+  font-size: 0.8rem;
+  color: #4d4d4d;
+  font-weight: 700;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background 0.2s ease-in-out;
+  position: relative;
+  z-index: 3;
+  white-space: nowrap;
+  line-height: 1;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.tab:hover {
+  color: #1d4eaa;
+}
+
+.filter-tabs input[type='radio']:checked + label {
+  color: #1d4eaa;
+}
+
+.glider {
+  position: absolute;
+  top: var(--segmented-control-pad);
+  bottom: var(--segmented-control-pad);
+  left: 0;
+  width: var(--filter-all-w);
+  background: linear-gradient(145deg, #d5d5d5, #efefef);
+  border-radius: 999px;
+  box-shadow: 2px 2px 5px #bcbcbc, -2px -2px 5px #ffffff;
+  z-index: 0;
+  transition: transform 0.22s ease-out, width 0.22s ease-out;
+}
+
+.tabs input:nth-of-type(1):checked ~ .glider {
+  transform: translateX(var(--filter-all-x));
+  width: var(--filter-all-w);
+}
+
+.tabs input:nth-of-type(2):checked ~ .glider {
+  transform: translateX(var(--filter-recent-x));
+  width: var(--filter-recent-w);
+}
+
+.tabs input:nth-of-type(3):checked ~ .glider {
+  transform: translateX(var(--filter-updated-x));
+  width: var(--filter-updated-w);
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    transform: scale(0.75);
+    transform-origin: left center;
+  }
+}

@@ -1,0 +1,112 @@
+<div class="container mt-4">
+  
+  <div
+    *ngIf="!loading && cases.length > 0"
+    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"
+  >
+    <h2 class="mb-0">Your submitted cases</h2>
+    <span class="fw-semibold ms-auto">Sort:</span>
+    <div class="sort-tabs" [class.is-latest]="sortOrder === 'latest'" [class.is-oldest]="sortOrder === 'oldest'">
+      <button type="button" class="sort-btn" [class.active]="sortOrder === 'latest'" (click)="setSort('latest')">
+        <span class="neu-text" aria-hidden="true">
+          <span class="neu-text-primary">
+            <span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span>
+          </span>
+          <span class="neu-text-secondary">
+            <span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span>
+          </span>
+        </span>
+        <span class="visually-hidden">Latest</span>
+      </button>
+      <button type="button" class="sort-btn" [class.active]="sortOrder === 'oldest'" (click)="setSort('oldest')">
+        <span class="neu-text" aria-hidden="true">
+          <span class="neu-text-primary">
+            <span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span>
+          </span>
+          <span class="neu-text-secondary">
+            <span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span>
+          </span>
+        </span>
+        <span class="visually-hidden">Oldest</span>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="loading">Loading case statuses...</div>
+  <div *ngIf="!loading && cases.length === 0" class="alert alert-info">
+    You have not submitted any cases yet.
+  </div>
+
+  <ng-container *ngIf="!loading && cases.length > 0">
+    <ng-container *ngFor="let group of groupedCases; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article *ngFor="let caseItem of group.items; trackBy: trackByCase" class="card mb-3 citizen-status-card">
+        <div class="card-body">
+          <div class="citizen-status-card-header">
+            <h3 class="card-title mb-0">
+              <a [routerLink]="['/case', caseItem._id]">{{ caseItem.case_title }}</a>
+            </h3>
+          </div>
+          <p class="card-text mb-1">
+            <b>Status:</b>
+            <span class="citizen-status-value">{{ displayStatus(caseItem) }}</span>
+          </p>
+          <p class="card-text mb-1">
+            <b>Submit date &amp; time:</b>
+            {{ (caseItem.createdAt || caseItem.created_on || caseItem.case_date) | date: 'dd-MM-yyyy HH:mm' }}
+          </p>
+          <p class="card-text mb-1">
+            <b>Updated:</b>
+            {{ (caseItem.updated_on || caseItem.updatedAt || caseItem.createdAt) | date: 'dd-MM-yyyy HH:mm' }}
+          </p>
+          <div class="complaint-actions">
+            <a
+              class="pending-action-btn pending-check-btn neu-button"
+              [routerLink]="['/case', caseItem._id]"
+            >
+              <span class="span-mother" aria-hidden="true"><span>V</span><span>i</span><span>e</span><span>w</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>V</span><span>i</span><span>e</span><span>w</span></span>
+              <span class="visually-hidden">View details</span>
+            </a>
+            <a
+              class="pending-action-btn pending-approve-btn neu-button"
+              [routerLink]="['/citizen/edit-case', caseItem._id]"
+              *ngIf="canManageCase(caseItem)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>E</span><span>d</span><span>i</span><span>t</span><span>&nbsp;</span><span>/</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>e</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>E</span><span>d</span><span>i</span><span>t</span><span>&nbsp;</span><span>/</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>e</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+              </span>
+              <span class="visually-hidden">Edit or add evidence</span>
+            </a>
+            <button
+              type="button"
+              class="pending-action-btn pending-reject-btn neu-button"
+              *ngIf="canManageCase(caseItem)"
+              [disabled]="actionLoadingId === caseItem._id"
+              (click)="withdrawCase(caseItem)"
+            >
+              <span class="span-mother" aria-hidden="true"><span>W</span><span>i</span><span>t</span><span>h</span><span>d</span><span>r</span><span>a</span><span>w</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>W</span><span>i</span><span>t</span><span>h</span><span>d</span><span>r</span><span>a</span><span>w</span></span>
+              <span class="visually-hidden">Withdraw case</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalCases > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+</div>

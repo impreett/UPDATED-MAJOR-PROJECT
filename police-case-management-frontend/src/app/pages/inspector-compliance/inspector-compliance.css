@@ -1,0 +1,74 @@
+.card {
+  border-radius: 12px;
+  width: 100%;
+}
+
+.compliance-link {
+  min-width: 0;
+  white-space: normal;
+  text-align: left;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.compliance-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.24s ease;
+}
+
+.compliance-link:hover::after,
+.compliance-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.card-text b {
+  display: inline-block;
+  width: 155px; 
+}
+
+.compliance-action-text b {
+  width: 155px !important;
+  display: inline-block;
+}
+
+.compliance-action-text {
+  font-size: 1.15rem;
+  color: #1b2b45;
+}
+
+:host-context(body.dark-mode) .compliance-action-text {
+  color: #e7f0fb;
+}
+
+.month-year-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.month-year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #c7ced6;
+}

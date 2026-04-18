@@ -1,0 +1,172 @@
+<div class="container mt-4" style="margin-bottom: 30px">
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="!loading && !errorMessage && !complaint"
+    loadingTitle="Loading complaint"
+    loadingMessage="Fetching the complaint details..."
+    emptyTitle="Complaint not found"
+    emptyMessage="We could not find that complaint."
+    (retry)="fetchComplaint()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && complaint">
+    <article class="card complaint-detail-card case-details-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+          <div>
+            <h2 class="mb-1 complaint-title">Edit complaint evidence</h2>
+            <p class="text-muted mb-0">Update evidence details for this complaint.</p>
+          </div>
+          <a [routerLink]="['/citizen/complaints', complaint._id]" class="pending-action-btn pending-check-btn neu-button">
+            <span class="span-mother" aria-hidden="true"><span>B</span><span>a</span><span>c</span><span>k</span></span>
+            <span class="span-mother2" aria-hidden="true"><span>B</span><span>a</span><span>c</span><span>k</span></span>
+            <span class="visually-hidden">Back</span>
+          </a>
+        </div>
+
+        <hr class="case-title-divider" />
+
+        <p class="detail-row">
+          <span class="detail-label"><b>Complaint ID:</b></span>
+          <span class="detail-value">{{ complaint._id }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Inspector:</b></span>
+          <span class="detail-value">{{ complaint.inspector_name }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Badge ID:</b></span>
+          <span class="detail-value">{{ complaint.inspector_police_id || 'N/A' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Inspector City:</b></span>
+          <span class="detail-value">{{ complaint.inspector_city }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Submitted by:</b></span>
+          <span class="detail-value">{{ complaint.citizen_name || 'You' }}</span>
+        </p>
+        <p class="detail-row">
+          <span class="detail-label"><b>Submitted:</b></span>
+          <span class="detail-value">{{ complaint.createdAt | date: 'dd-MM-yyyy HH:mm' }}</span>
+        </p>
+
+        <form (ngSubmit)="onSubmit()" novalidate>
+          <div class="mb-3">
+            <label class="form-label required">Reason</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [(ngModel)]="reason"
+              name="reason"
+              [class.is-invalid]="!!reasonError"
+              placeholder="Describe the reason for this complaint..."
+            ></textarea>
+            <div *ngIf="reasonError" class="invalid-feedback d-block">{{ reasonError }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Evidence entries</label>
+            <div class="text-muted small mb-2">Images or videos only. Max 15MB.</div>
+            <div class="evidence-editor-list">
+              <div
+                *ngFor="let evidence of evidenceEntries; let i = index; trackBy: trackByEvidenceIndex"
+                class="evidence-editor-row"
+              >
+                <div class="row g-2 align-items-start flex-nowrap evidence-editor-inputs">
+                  <div class="col-5">
+                    <label class="form-label">Evidence name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [value]="evidence.evidence_name"
+                      [class.is-invalid]="!!getEvidenceError(i, 'evidence_name')"
+                      (input)="onEvidenceNameChange(i, $any($event.target).value)"
+                    />
+                  </div>
+                  <div class="col-5">
+                    <label class="form-label">Evidence file</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      accept="image/*,video/*"
+                      [class.is-invalid]="!!getEvidenceError(i, 'evidence_file')"
+                      (change)="onEvidenceFileChange(i, $event)"
+                      #evidenceFileInput
+                    />
+                    <div *ngIf="evidence.existing_file_url" class="evidence-existing-link mt-2">
+                      <a [href]="evidenceLink(evidence)" target="_blank" rel="noopener">View evidence</a>
+                    </div>
+                  </div>
+                  <div class="col-2 d-flex align-items-start">
+                    <button
+                      type="button"
+                      class="pending-action-btn pending-reject-btn neu-button w-100"
+                      (click)="removeEvidence(i)"
+                    >
+                      <span class="span-mother" aria-hidden="true">
+                        <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span>
+                      </span>
+                      <span class="span-mother2" aria-hidden="true">
+                        <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span>
+                      </span>
+                      <span class="visually-hidden">Remove evidence</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="row g-2 flex-nowrap evidence-editor-meta">
+                  <div class="col-5">
+                    <div *ngIf="getEvidenceError(i, 'evidence_name')" class="invalid-feedback d-block">
+                      {{ getEvidenceError(i, 'evidence_name') }}
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div *ngIf="evidence.evidence_file" class="file-meta">
+                      <span class="file-chip"><strong>Selected:</strong> {{ evidenceFileLabel(evidence) }}</span>
+                      <button
+                        type="button"
+                        class="pending-action-btn pending-check-btn neu-button"
+                        (click)="clearEvidenceFile(i, evidenceFileInput)"
+                      >
+                        Clear file
+                      </button>
+                    </div>
+                    <div *ngIf="getEvidenceError(i, 'evidence_file')" class="invalid-feedback d-block">
+                      {{ getEvidenceError(i, 'evidence_file') }}
+                    </div>
+                  </div>
+                  <div class="col-2"></div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="pending-action-btn pending-check-btn neu-button mt-3" (click)="addEvidence()">
+              <span class="span-mother" aria-hidden="true">
+                <span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>E</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>E</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+              </span>
+              <span class="visually-hidden">Add evidence</span>
+            </button>
+          </div>
+
+          <div class="citizen-edit-actions mt-3">
+            <button type="submit" class="pending-action-btn pending-approve-btn neu-button w-100" [disabled]="submitting">
+              <ng-container *ngIf="submitting; else submitLabel">
+                <span class="span-mother" aria-hidden="true"><span>S</span><span>a</span><span>v</span><span>i</span><span>n</span><span>g</span><span>.</span><span>.</span><span>.</span></span>
+                <span class="span-mother2" aria-hidden="true"><span>S</span><span>a</span><span>v</span><span>i</span><span>n</span><span>g</span><span>.</span><span>.</span><span>.</span></span>
+                <span class="visually-hidden">Saving...</span>
+              </ng-container>
+              <ng-template #submitLabel>
+                <span class="span-mother" aria-hidden="true"><span>S</span><span>a</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>h</span><span>a</span><span>n</span><span>g</span><span>e</span><span>s</span></span>
+                <span class="span-mother2" aria-hidden="true"><span>S</span><span>a</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>h</span><span>a</span><span>n</span><span>g</span><span>e</span><span>s</span></span>
+                <span class="visually-hidden">Save changes</span>
+              </ng-template>
+            </button>
+          </div>
+        </form>
+      </div>
+    </article>
+  </ng-container>
+</div>

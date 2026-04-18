@@ -1,0 +1,38 @@
+.month-year-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.month-year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #c7ced6;
+}
+
+.card.mb-3 .card-body {
+  border: 1px solid #d7d7d7;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.report-text-content {
+  font-size: 1.15rem;
+  color: #1b2b45;
+  line-height: 1.6;
+}
+
+:host-context(body.dark-mode) .report-text-content {
+  color: #e7f0fb;
+}
+
+.report-read-btn {
+  min-width: 162px;
+}
+
+.card-text b {
+  display: inline-block;
+  width: 75px !important;
+}

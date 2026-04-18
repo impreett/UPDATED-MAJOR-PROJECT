@@ -1,0 +1,156 @@
+<div class="container mt-4">
+  <h3 class="mb-3">Pay Fine</h3>
+
+  <div
+    *ngIf="!loading && fines.length > 0"
+    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"
+  >
+    <h2 class="mb-0">Your fines</h2>
+    <span class="fw-semibold ms-auto">Filter:</span>
+    <div class="filter-tabs" role="group" aria-label="Filter fines">
+      <div class="tabs" #filterTabs>
+        <input
+          type="radio"
+          id="fine-filter-all"
+          name="fine_status_filter"
+          [checked]="filterStatus === 'all'"
+          (change)="setFilter('all')"
+        />
+        <label class="tab" for="fine-filter-all">
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>A</span><span>l</span><span>l</span></span>
+            <span class="neu-text-secondary"><span>A</span><span>l</span><span>l</span></span>
+          </span>
+          <span class="visually-hidden">All</span>
+        </label>
+
+        <input
+          type="radio"
+          id="fine-filter-paid"
+          name="fine_status_filter"
+          [checked]="filterStatus === 'paid'"
+          (change)="setFilter('paid')"
+        />
+        <label class="tab" for="fine-filter-paid">
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>P</span><span>a</span><span>i</span><span>d</span></span>
+            <span class="neu-text-secondary"><span>P</span><span>a</span><span>i</span><span>d</span></span>
+          </span>
+          <span class="visually-hidden">Paid</span>
+        </label>
+
+        <input
+          type="radio"
+          id="fine-filter-unpaid"
+          name="fine_status_filter"
+          [checked]="filterStatus === 'unpaid'"
+          (change)="setFilter('unpaid')"
+        />
+        <label class="tab" for="fine-filter-unpaid">
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>U</span><span>n</span><span>p</span><span>a</span><span>i</span><span>d</span></span>
+            <span class="neu-text-secondary"><span>U</span><span>n</span><span>p</span><span>a</span><span>i</span><span>d</span></span>
+          </span>
+          <span class="visually-hidden">Unpaid</span>
+        </label>
+
+        <span class="glider"></span>
+      </div>
+    </div>
+    <span class="fw-semibold ms-2">Sort:</span>
+    <div class="sort-tabs" role="group" aria-label="Sort fines" [class.is-latest]="sortOrder === 'latest'" [class.is-oldest]="sortOrder === 'oldest'">
+      <button
+        type="button"
+        class="sort-btn"
+        [class.active]="sortOrder === 'latest'"
+        (click)="setSort('latest')"
+      >
+        <span class="neu-text" aria-hidden="true">
+          <span class="neu-text-primary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+          <span class="neu-text-secondary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+        </span>
+        <span class="visually-hidden">Latest</span>
+      </button>
+      <button
+        type="button"
+        class="sort-btn"
+        [class.active]="sortOrder === 'oldest'"
+        (click)="setSort('oldest')"
+      >
+        <span class="neu-text" aria-hidden="true">
+          <span class="neu-text-primary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+          <span class="neu-text-secondary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+        </span>
+        <span class="visually-hidden">Oldest</span>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-muted">Loading fines...</div>
+  <div *ngIf="!loading && !groupedFines.length" class="alert alert-info">No fines found.</div>
+
+  <ng-container *ngIf="!loading && groupedFines.length">
+    <ng-container *ngFor="let group of groupedFines; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article *ngFor="let fine of group.items; trackBy: trackByFine" class="card mb-3 fine-card">
+        <div class="card-body">
+          <div class="fine-card-header">
+            <h3 class="card-title fine-reason-title">
+              <a class="fine-reason-link" [routerLink]="['/citizen/fine', fine._id]">{{ fine.reason }}</a>
+            </h3>
+          </div>
+          <hr class="fine-title-divider" />
+          <div class="fine-status-row">
+            <span class="fine-status-chip" [class.is-paid]="!canPay(fine)">{{ statusLabel(fine) }}</span>
+          </div>
+          <p class="card-text mt-2 mb-1"><b>Amount (₹):</b> ₹{{ fine.amount }}</p>
+          <p class="card-text mb-1"><b>Issued:</b> {{ fine.createdAt | date: 'dd-MM-yyyy HH:mm' }}</p>
+
+          <div class="d-flex gap-2 flex-wrap mt-3">
+            <button
+              type="button"
+              class="pending-action-btn pending-approve-btn neu-button"
+              *ngIf="canPay(fine)"
+              [disabled]="payingId === fine._id"
+              (click)="payFine(fine)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>P</span><span>a</span><span>y</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>P</span><span>a</span><span>y</span>
+              </span>
+              <span class="visually-hidden">Pay</span>
+            </button>
+            <button
+              type="button"
+              class="pending-action-btn pending-check-btn neu-button"
+              (click)="downloadFinePdf(fine)"
+            >
+              <span class="span-mother" aria-hidden="true">
+                <span>D</span><span>o</span><span>w</span><span>n</span><span>l</span><span>o</span><span>a</span><span>d</span><span>&nbsp;</span><span>P</span><span>D</span><span>F</span>
+              </span>
+              <span class="span-mother2" aria-hidden="true">
+                <span>D</span><span>o</span><span>w</span><span>n</span><span>l</span><span>o</span><span>a</span><span>d</span><span>&nbsp;</span><span>P</span><span>D</span><span>F</span>
+              </span>
+              <span class="visually-hidden">Download PDF</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalFines > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,216 @@
+<div class="container mt-4" style="margin-bottom: 30px">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <h2 class="mb-0">Update cases</h2>
+    <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="cases.length > 1">
+      <span class="fw-semibold">Sort:</span>
+      <div class="sort-tabs" role="group" aria-label="Sort cases" [class.is-latest]="sortOrder === 'latest'" [class.is-oldest]="sortOrder === 'oldest'">
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'latest'"
+          (click)="setSortOrder('latest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Latest</span>
+        </button>
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'oldest'"
+          (click)="setSortOrder('oldest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+            <span class="neu-text-secondary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+          </span>
+          <span class="visually-hidden">Oldest</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-body mb-4 pending-user-surface">
+    <div class="row">
+      <div class="col-md-4">
+        <select
+          class="form-select"
+          [(ngModel)]="searchField"
+          (ngModelChange)="onSearchFieldChange($event)"
+          name="search_field"
+        >
+          <option value="for-all">All</option>
+          <option value="case_title">Case title</option>
+          <option value="case_type">Case type</option>
+          <option value="case_description">Description</option>
+          <option value="suspects">Suspects</option>
+          <option value="victim">Victim</option>
+          <option value="guilty_name">Guilty name</option>
+          <option value="case_date">Date</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+      <div class="col-md-8">
+        <ng-container [ngSwitch]="searchField">
+          <select
+            *ngSwitchCase="'case_type'"
+            class="form-select"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchValueChange($event)"
+            name="search_case_type"
+          >
+            <option value="">Select case type</option>
+            <option *ngFor="let type of caseTypes" [value]="type">{{ type }}</option>
+          </select>
+          <select
+            *ngSwitchCase="'status'"
+            class="form-select"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchValueChange($event)"
+            name="search_status"
+          >
+            <option value="">Select status</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="CLOSE">CLOSE</option>
+          </select>
+          <input
+            *ngSwitchCase="'case_date'"
+            type="date"
+            class="form-control"
+            placeholder="Select date"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchValueChange($event)"
+            [max]="todayStr"
+            name="search_case_date"
+          />
+          <input
+            *ngSwitchDefault
+            type="text"
+            class="form-control"
+            placeholder="Enter search value..."
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearchValueChange($event)"
+            name="search_value"
+          />
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading">Loading cases...</div>
+
+  <div *ngIf="!loading && groupedCases.length === 0" class="alert alert-info">No cases found.</div>
+
+  <ng-container *ngIf="!loading">
+    <ng-container *ngFor="let group of groupedCases">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article
+        *ngFor="let caseItem of group.items"
+        class="case-details-card search-result-article"
+        [class.search-title-only-card]="searchField === 'case_title'"
+      >
+        <h3 class="mb-4 search-result-title">
+          <ng-container *ngIf="caseItem?._id; else userUpdateTitlePlain">
+            <a
+              [routerLink]="['/inspector/update-form', caseItem._id]"
+              class="result-title-link"
+              [innerHTML]="highlightText(caseItem.case_title, 'Untitled', 'case_title')"
+            ></a>
+          </ng-container>
+          <ng-template #userUpdateTitlePlain>
+            <span [innerHTML]="highlightText(caseItem.case_title, 'Untitled', 'case_title')"></span>
+          </ng-template>
+        </h3>
+        <p class="detail-row" *ngIf="shouldShowField('case_id')">
+          <span class="detail-label"><b>Case ID:</b></span>
+          <span class="detail-value" [innerHTML]="highlightText(caseItem._id, 'N/A')"></span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('case_type')">
+          <span class="detail-label"><b>Type:</b></span>
+          <span class="detail-value" [innerHTML]="highlightText(caseItem.case_type, 'N/A', 'case_type')"></span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('case_handler')">
+          <span class="detail-label"><b>Handler:</b></span>
+          <span class="detail-value" [innerHTML]="highlightText(caseItem.case_handler, 'N/A', 'case_handler')"></span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('victim')">
+          <span class="detail-label"><b>Victim:</b></span>
+          <span class="detail-value people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(caseItem)">
+            <ng-container *ngIf="peopleForCaseField(caseItem, 'victim') as victimPeople">
+              <ng-container *ngIf="victimPeople.length; else noVictim">
+                <span class="person-line" *ngFor="let person of victimPeople">
+                  <span class="person-name-part" [innerHTML]="highlightText('Name: ' + person.name, '', 'victim')"></span>
+                  <span class="person-age-part" [innerHTML]="highlightText('Age: ' + person.age, '', 'victim')"></span>
+                </span>
+              </ng-container>
+            </ng-container>
+            <ng-template #noVictim>Unidentified</ng-template>
+          </span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('suspects')">
+          <span class="detail-label"><b>Suspects:</b></span>
+          <span class="detail-value people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(caseItem)">
+            <ng-container *ngIf="peopleForCaseField(caseItem, 'suspects') as suspectPeople">
+              <ng-container *ngIf="suspectPeople.length; else noSuspects">
+                <span class="person-line" *ngFor="let person of suspectPeople">
+                  <span class="person-name-part" [innerHTML]="highlightText('Name: ' + person.name, '', 'suspects')"></span>
+                  <span class="person-age-part" [innerHTML]="highlightText('Age: ' + person.age, '', 'suspects')"></span>
+                </span>
+              </ng-container>
+            </ng-container>
+            <ng-template #noSuspects>Unidentified</ng-template>
+          </span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('guilty_name')">
+          <span class="detail-label"><b>Guilty name:</b></span>
+          <span class="detail-value people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(caseItem)">
+            <ng-container *ngIf="peopleForCaseField(caseItem, 'guilty_name') as guiltyPeople">
+              <ng-container *ngIf="guiltyPeople.length; else noGuilty">
+                <span class="person-line" *ngFor="let person of guiltyPeople">
+                  <span class="person-name-part" [innerHTML]="highlightText('Name: ' + person.name, '', 'guilty_name')"></span>
+                  <span class="person-age-part" [innerHTML]="highlightText('Age: ' + person.age, '', 'guilty_name')"></span>
+                </span>
+              </ng-container>
+            </ng-container>
+            <ng-template #noGuilty>Unidentified</ng-template>
+          </span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('case_date')">
+          <span class="detail-label"><b>Date:</b></span>
+          <span class="detail-value" [innerHTML]="highlightText(displayDate(caseItem.case_date), 'N/A', 'case_date')"></span>
+        </p>
+        <p class="detail-row" *ngIf="shouldShowField('status')">
+          <span class="detail-label"><b>Status:</b></span>
+          <span class="detail-value" [innerHTML]="highlightText(caseItem.status, 'N/A', 'status')"></span>
+        </p>
+
+        <p class="detail-row desc-row" *ngIf="shouldShowField('case_description')">
+          <span class="detail-label"><b>Description:</b></span>
+          <span class="detail-value desc-value-bg">
+            <span
+              style="white-space: pre-wrap"
+              [innerHTML]="highlightText(caseItem.case_description, 'N/A', 'case_description')"
+            ></span>
+          </span>
+        </p>
+      </article>
+    </ng-container>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalCases > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+</div>
+
+

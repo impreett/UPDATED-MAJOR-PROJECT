@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/public-report/public-report.css"],
+  "sourcesContent": [".report-page-content {\n  background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),\n    url(\"/assets/register-police-bg.jpg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  background-attachment: fixed;\n}\n\n.report-form-card {\n  border: 1px solid rgba(255, 255, 255, 0.65);\n  border-radius: 14px;\n  background: rgba(255, 255, 255, 0.96);\n}\n\n@media (max-width: 991.98px) {\n  .report-page-content {\n    background-attachment: scroll;\n  }\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,oBAAkB,gBAAgB,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE,KAApC,EAA2C,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE,MAAM,EACrF;AACF,mBAAiB;AACjB,uBAAqB;AACrB,qBAAmB;AACnB,yBAAuB;AACzB;AAEA,CAAC;AACC,UAAQ,IAAI,MAAM,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE;AACtC,iBAAe;AACf,cAAY,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE;AAClC;AAEA,OAAO,CAAC,SAAS,EAAE;AACjB,GAhBD;AAiBG,2BAAuB;AACzB;AACF;",
+  "names": []
+}

@@ -1,0 +1,21 @@
+.app-feedback-message-wrap {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, calc(100% - 24px));
+  z-index: 1350;
+  pointer-events: none;
+}
+
+.app-feedback-message {
+  margin: 0;
+  pointer-events: auto;
+}
+
+.app-confirm-overlay {
+  z-index: 1400;
+}
+
+.app-confirm-input {
+  margin-bottom: 16px;
+}

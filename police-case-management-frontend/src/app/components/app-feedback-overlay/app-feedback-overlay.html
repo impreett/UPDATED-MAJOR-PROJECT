@@ -1,0 +1,74 @@
+<div
+  *ngIf="feedback.message() as appMessage"
+  class="app-feedback-message-wrap"
+  [style.top]="messageTopOffset"
+>
+  <div class="alert alert-dismissible fade show text-center app-timed-alert app-feedback-message" [ngClass]="alertClassFor(appMessage.tone)" role="alert">
+    <strong *ngIf="appMessage.title" class="d-block mb-1">{{ appMessage.title }}</strong>
+    {{ appMessage.text }}
+    <button type="button" class="btn-close" (click)="closeMessage()" aria-label="Close"></button>
+  </div>
+</div>
+
+<div
+  *ngIf="feedback.confirmDialog() as appConfirm"
+  class="app-confirm-overlay"
+  role="dialog"
+  aria-modal="true"
+  (click)="onConfirmBackdropClick()"
+>
+  <div class="app-confirm-card pending-user-surface" (click)="$event.stopPropagation()">
+    <h5 class="mb-2">{{ appConfirm.title }}</h5>
+    <p class="mb-3 app-confirm-text">
+      <ng-container *ngIf="appConfirm.subject; else plainConfirmMessage">
+        {{ appConfirm.message }}
+        <b>{{ appConfirm.subject }}</b>{{ appConfirm.messageSuffix || '' }}
+      </ng-container>
+      <ng-template #plainConfirmMessage>{{ appConfirm.message }}</ng-template>
+    </p>
+
+    <div *ngIf="appConfirm.mode === 'prompt'" class="app-confirm-input">
+      <label class="form-label">{{ appConfirm.inputLabel || 'Action taken' }}</label>
+      <textarea
+        class="form-control"
+        rows="3"
+        [attr.placeholder]="appConfirm.inputPlaceholder || ''"
+        [attr.maxlength]="appConfirm.inputMaxLength || null"
+        [value]="promptValue"
+        (input)="onPromptInput($any($event.target).value)"
+      ></textarea>
+      <div *ngIf="promptError" class="text-danger small mt-2">{{ promptError }}</div>
+      <div *ngIf="appConfirm.inputHint" class="text-muted small mt-2">{{ appConfirm.inputHint }}</div>
+    </div>
+
+    <div class="app-confirm-actions">
+      <button
+        type="button"
+        [class]="buttonClassFor(appConfirm.confirmTone)"
+        (click)="respondToConfirm(true)"
+      >
+        <span class="span-mother" aria-hidden="true">
+          <span *ngFor="let char of labelChars(appConfirm.confirmLabel)">{{ char }}</span>
+        </span>
+        <span class="span-mother2" aria-hidden="true">
+          <span *ngFor="let char of labelChars(appConfirm.confirmLabel)">{{ char }}</span>
+        </span>
+        <span class="visually-hidden">{{ appConfirm.confirmLabel }}</span>
+      </button>
+
+      <button
+        type="button"
+        [class]="buttonClassFor(appConfirm.cancelTone)"
+        (click)="respondToConfirm(false)"
+      >
+        <span class="span-mother" aria-hidden="true">
+          <span *ngFor="let char of labelChars(appConfirm.cancelLabel)">{{ char }}</span>
+        </span>
+        <span class="span-mother2" aria-hidden="true">
+          <span *ngFor="let char of labelChars(appConfirm.cancelLabel)">{{ char }}</span>
+        </span>
+        <span class="visually-hidden">{{ appConfirm.cancelLabel }}</span>
+      </button>
+    </div>
+  </div>
+</div>

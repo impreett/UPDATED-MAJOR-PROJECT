@@ -1,0 +1,47 @@
+.issue-fine-card {
+  border-radius: 12px;
+  border: 1px solid #d8e2ef;
+}
+
+.evidence-editor-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-editor-row {
+  border: 1px solid #dde6f1;
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+.evidence-editor-row .row {
+  flex-wrap: nowrap;
+}
+
+.evidence-editor-meta {
+  margin-top: 6px;
+}
+
+.evidence-editor-inputs {
+  align-items: flex-start !important;
+}
+
+.evidence-editor-inputs .col-2 {
+  align-items: flex-start !important;
+  padding-top: 1.75rem;
+}
+
+:host-context(body.dark-mode) .issue-fine-card {
+  background: #1f2c3a;
+  border-color: #344a60;
+}
+
+:host-context(body.dark-mode) .issue-fine-card .card-body {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .evidence-editor-row {
+  background: #141d29;
+  border-color: #33465c;
+}

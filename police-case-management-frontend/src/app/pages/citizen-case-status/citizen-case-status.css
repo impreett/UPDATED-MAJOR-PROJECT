@@ -1,0 +1,168 @@
+.card {
+  border-radius: 12px;
+}
+
+.citizen-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.citizen-status-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.month-year-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.month-year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #c7ced6;
+}
+
+.card-text b {
+  display: inline-block;
+  width: 190px;
+}
+
+.citizen-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #edf4ff;
+  color: #1d4f91;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.citizen-status-badge.is-withdrawn {
+  background: #ffeceb;
+  color: #9b2f2f;
+}
+
+.citizen-status-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
+}
+
+.citizen-status-line {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1b2b45;
+}
+
+.citizen-status-label {
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.citizen-status-value {
+  font-weight: 600;
+}
+
+.citizen-status-description {
+  display: inline-block;
+  margin-top: 4px;
+  width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #f6f8fc;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.citizen-status-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.complaint-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.citizen-status-note {
+  margin-top: 10px;
+  color: #5f6b7a;
+}
+
+:host-context(body.dark-mode) .citizen-status-card {
+  background: #1f2c3a;
+  border-color: #344a60 !important;
+}
+
+:host-context(body.dark-mode) .citizen-status-badge {
+  background: #203145;
+  color: #d9e8ff;
+}
+
+:host-context(body.dark-mode) .citizen-status-badge.is-withdrawn {
+  background: #4a2323;
+  color: #ffd3d0;
+}
+
+:host-context(body.dark-mode) .citizen-status-card .card-title a {
+  color: #e7f0fb;
+}
+
+:host-context(body.dark-mode) .citizen-status-card p {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .citizen-status-line {
+  color: #e7f0fb;
+}
+
+:host-context(body.dark-mode) .citizen-status-description {
+  background: #182330;
+  border-color: #31455a;
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .citizen-status-note {
+  color: #aebfd3;
+}
+
+@media (max-width: 768px) {
+  .citizen-status-meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .citizen-status-card-header {
+    flex-direction: column;
+  }
+
+  .citizen-status-actions > .pending-action-btn,
+  .citizen-status-actions > .neu-button {
+    width: 100%;
+  }
+
+  .complaint-actions > .pending-action-btn,
+  .complaint-actions > .neu-button {
+    width: 100%;
+  }
+}

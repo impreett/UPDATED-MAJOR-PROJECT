@@ -1,0 +1,103 @@
+﻿<div class="public-page-shell">
+  <header
+    class="d-flex align-items-center justify-content-center p-3"
+    style="background-color: #000; color: white"
+  >
+    <img src="/assets/logo.png" alt="Logo" class="public-header-logo" />
+    <h1>Police Case Management</h1>
+  </header>
+  <div class="public-page-content report-page-content">
+    <div class="container py-5">
+      <h2 class="text-center mb-4">Report an issue</h2>
+      <div class="col-md-8 col-lg-6 mx-auto">
+        <div class="card report-form-card shadow">
+          <div class="card-body p-4 p-md-5">
+        <form [formGroup]="publicReportForm" (ngSubmit)="onSubmit()" novalidate>
+          <div class="mb-3">
+            <label class="form-label required">Email</label>
+            <input
+              type="text"
+              class="form-control"
+              [class.error]="errors.email"
+              placeholder="Enter your email"
+              formControlName="email"
+              [attr.aria-invalid]="errors.email ? 'true' : 'false'"
+            />
+            <label *ngIf="errors.email" class="error">{{ errors.email }}</label>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required">Report</label>
+            <textarea
+              class="form-control"
+              [class.error]="errors.reportText"
+              rows="6"
+              placeholder="Describe your issue here (min 50 characters)..."
+              formControlName="reportText"
+              [attr.aria-invalid]="errors.reportText ? 'true' : 'false'"
+            ></textarea>
+            <label *ngIf="errors.reportText" class="error">{{ errors.reportText }}</label>
+          </div>
+          <button type="submit" class="pending-action-btn pending-check-btn neu-button w-100 mt-3">
+            <span aria-hidden="true" class="span-mother">
+              <span>S</span>
+              <span>u</span>
+              <span>b</span>
+              <span>m</span>
+              <span>i</span>
+              <span>t</span>
+              <span>&nbsp;</span>
+              <span>r</span>
+              <span>e</span>
+              <span>p</span>
+              <span>o</span>
+              <span>r</span>
+              <span>t</span>
+            </span>
+            <span aria-hidden="true" class="span-mother2">
+              <span>S</span>
+              <span>u</span>
+              <span>b</span>
+              <span>m</span>
+              <span>i</span>
+              <span>t</span>
+              <span>&nbsp;</span>
+              <span>r</span>
+              <span>e</span>
+              <span>p</span>
+              <span>o</span>
+              <span>r</span>
+              <span>t</span>
+            </span>
+            <span class="visually-hidden">Submit report</span>
+          </button>
+        </form>
+        <div class="text-center">
+          <a
+            href="#"
+            class="pending-action-btn pending-check-btn neu-button w-100 mt-3"
+            (click)="$event.preventDefault(); goBack()"
+          >
+            <span aria-hidden="true" class="span-mother">
+              <span>B</span>
+              <span>a</span>
+              <span>c</span>
+              <span>k</span>
+            </span>
+            <span aria-hidden="true" class="span-mother2">
+              <span>B</span>
+              <span>a</span>
+              <span>c</span>
+              <span>k</span>
+            </span>
+            <span class="visually-hidden">Back</span>
+          </a>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
+
+

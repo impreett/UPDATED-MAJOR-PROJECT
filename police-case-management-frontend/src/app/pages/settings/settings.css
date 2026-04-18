@@ -1,0 +1,117 @@
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.settings-role-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #edf4ff;
+  color: #1d4f91;
+  font-weight: 600;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  border: 1px solid #d8e2ef;
+  border-radius: 16px;
+  padding: 16px;
+  background: #f9fbfe;
+}
+
+.settings-card {
+  border-radius: 14px;
+  border: 1px solid #d8e2ef;
+}
+
+.settings-submit-btn {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.settings-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 17, 28, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1200;
+}
+
+.settings-modal {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
+.settings-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: #526170;
+}
+
+.settings-modal-close:hover {
+  color: #1f2c3a;
+}
+
+:host-context(body.dark-mode) .settings-card {
+  background: #1f2c3a;
+  border-color: #344a60;
+}
+
+:host-context(body.dark-mode) .settings-card .card-body,
+:host-context(body.dark-mode) .settings-card h5,
+:host-context(body.dark-mode) .settings-card label {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .settings-grid {
+  border-color: #344a60;
+  background: #1b2531;
+}
+
+:host-context(body.dark-mode) .settings-role-badge {
+  background: #203145;
+  color: #d9e8ff;
+}
+
+:host-context(body.dark-mode) .settings-modal {
+  background: #1f2c3a;
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .settings-modal-close {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .settings-modal-close:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

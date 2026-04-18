@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/issue-fine/issue-fine.css"],
+  "sourcesContent": [".issue-fine-card {\n  border-radius: 12px;\n  border: 1px solid #d8e2ef;\n}\n\n.evidence-editor-list {\n  display: grid;\n  gap: 12px;\n}\n\n.evidence-editor-row {\n  border: 1px solid #dde6f1;\n  border-radius: 12px;\n  padding: 12px;\n  background: #f8fbff;\n}\n\n.evidence-editor-row .row {\n  flex-wrap: nowrap;\n}\n\n.evidence-editor-meta {\n  margin-top: 6px;\n}\n\n.evidence-editor-inputs {\n  align-items: flex-start !important;\n}\n\n.evidence-editor-inputs .col-2 {\n  align-items: flex-start !important;\n  padding-top: 1.75rem;\n}\n\n:host-context(body.dark-mode) .issue-fine-card {\n  background: #1f2c3a;\n  border-color: #344a60;\n}\n\n:host-context(body.dark-mode) .issue-fine-card .card-body {\n  color: #dce5ef;\n}\n\n:host-context(body.dark-mode) .evidence-editor-row {\n  background: #141d29;\n  border-color: #33465c;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,iBAAe;AACf,UAAQ,IAAI,MAAM;AACpB;AAEA,CAAC;AACC,WAAS;AACT,OAAK;AACP;AAEA,CAAC;AACC,UAAQ,IAAI,MAAM;AAClB,iBAAe;AACf,WAAS;AACT,cAAY;AACd;AAEA,CAPC,oBAOoB,CAAC;AACpB,aAAW;AACb;AAEA,CAAC;AACC,cAAY;AACd;AAEA,CAAC;AACC,eAAa;AACf;AAEA,CAJC,uBAIuB,CAAC;AACvB,eAAa;AACb,eAAa;AACf;AAEA,cAAc,IAAI,CAAC,WAAW,CAlC7B;AAmCC,cAAY;AACZ,gBAAc;AAChB;AAEA,cAAc,IAAI,CAAC,WAAW,CAvC7B,gBAuC8C,CAAC;AAC9C,SAAO;AACT;AAEA,cAAc,IAAI,CAAC,WAAW,CAjC7B;AAkCC,cAAY;AACZ,gBAAc;AAChB;",
+  "names": []
+}

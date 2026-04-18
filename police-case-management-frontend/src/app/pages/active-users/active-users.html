@@ -1,0 +1,98 @@
+<div class="container mt-4 mb-4 active-users-page">
+  <section class="active-users-hero">
+    <div>
+      <h2 class="mb-1">Active Police Inspectors</h2>
+    </div>
+    <div class="active-users-metrics">
+      <article class="metric-card">
+        <span class="metric-label">Total active</span>
+        <span class="metric-value">{{ users.length }}</span>
+      </article>
+    </div>
+  </section>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading inspectors"
+    loadingMessage="Fetching active inspector roster..."
+    emptyTitle="No active inspectors"
+    emptyMessage="There are no active inspectors to show."
+    (retry)="fetchActiveUsers()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && totalUsers > 0">
+    <div class="active-users-grid">
+      <article *ngFor="let user of pagedUsers" class="active-user-card">
+        <header class="active-user-head">
+          <h5 class="active-user-name mb-0">{{ user.fullname }}</h5>
+          <span class="active-user-city">{{ user.city }}</span>
+        </header>
+
+        <div class="active-user-details">
+          <p class="detail-item mb-1"><b>Email:</b> {{ user.email }}</p>
+          <p class="detail-item mb-1"><b>Inspector ID:</b> {{ user.police_id }}</p>
+          <p class="detail-item mb-0"><b>Contact:</b> {{ user.contact }}</p>
+        </div>
+
+        <div class="active-user-stats">
+          <div class="active-user-stat">
+            <span class="active-user-stat-label">Working cases</span>
+            <span class="active-user-stat-value">{{ user.working_cases || 0 }}</span>
+          </div>
+          <div class="active-user-stat">
+            <span class="active-user-stat-label">Completed cases</span>
+            <span class="active-user-stat-value">{{ user.completed_cases || 0 }}</span>
+          </div>
+        </div>
+
+        <div class="active-user-actions">
+          <button
+            class="pending-action-btn pending-reject-btn neu-button active-user-disable-btn"
+            (click)="handleSuspend(user._id, user.fullname)"
+          >
+            <span class="span-mother" aria-hidden="true"><span>S</span><span>u</span><span>s</span><span>p</span><span>e</span><span>n</span><span>d</span><span>&nbsp;</span><span>I</span><span>n</span><span>s</span><span>p</span><span>e</span><span>c</span><span>t</span><span>o</span><span>r</span></span>
+            <span class="span-mother2" aria-hidden="true"><span>S</span><span>u</span><span>s</span><span>p</span><span>e</span><span>n</span><span>d</span><span>&nbsp;</span><span>I</span><span>n</span><span>s</span><span>p</span><span>e</span><span>c</span><span>t</span><span>o</span><span>r</span></span>
+            <span class="visually-hidden">Suspend Inspector</span>
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <div class="list-pagination" *ngIf="totalUsers > 0">
+      <div class="page-summary">{{ pageSummary }}</div>
+      <div class="page-buttons">
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="prevPage()" [disabled]="currentPage === 1">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+        <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="suspendConfirm" class="app-confirm-overlay" role="dialog" aria-modal="true" (click)="closeSuspendConfirm()">
+    <div class="app-confirm-card pending-user-surface" (click)="$event.stopPropagation()">
+      <h5 class="mb-2">Suspend inspector?</h5>
+      <p class="mb-3 app-confirm-text">
+        Are you sure you want to suspend <b>{{ suspendConfirm.name }}</b
+        >? You can unsuspend from Suspended Police Inspectors.
+      </p>
+      <div class="app-confirm-actions">
+        <button type="button" class="pending-action-btn pending-approve-btn neu-button" [disabled]="isSuspending" (click)="confirmSuspend()">
+          <span class="span-mother" aria-hidden="true"><span>Y</span><span>e</span><span>s</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>Y</span><span>e</span><span>s</span></span>
+          <span class="visually-hidden">Yes</span>
+        </button>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="isSuspending" (click)="closeSuspendConfirm()">
+          <span class="span-mother" aria-hidden="true"><span>N</span><span>o</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>N</span><span>o</span></span>
+          <span class="visually-hidden">No</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

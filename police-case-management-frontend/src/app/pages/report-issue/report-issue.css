@@ -1,0 +1,13 @@
+.report-issue-form {
+  border: 1px solid #d8e2ef;
+  border-radius: 12px;
+  padding: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(20, 46, 80, 0.06);
+}
+
+:host-context(body.dark-mode) .report-issue-form {
+  background: #1f2c3a;
+  border-color: #344a60;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}

@@ -1,0 +1,27 @@
+<ng-container *ngIf="visible">
+  <section class="app-state-panel pending-user-surface" [class.is-loading]="mode === 'loading'">
+    <div class="app-state-header">
+      <div class="app-state-icon" aria-hidden="true">
+        <span *ngIf="mode === 'loading'" class="spinner-border spinner-border-sm text-secondary"></span>
+        <span *ngIf="mode === 'error'" class="app-state-dot error"></span>
+        <span *ngIf="mode === 'empty'" class="app-state-dot empty"></span>
+      </div>
+      <div class="app-state-copy">
+        <h5 class="mb-1">{{ title }}</h5>
+        <p class="mb-0">{{ message }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="mode === 'loading'" class="app-state-skeleton" aria-hidden="true">
+      <span class="skeleton-line"></span>
+      <span class="skeleton-line"></span>
+      <span class="skeleton-line short"></span>
+    </div>
+
+    <div *ngIf="showRetryButton" class="app-state-actions">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="retry.emit()">
+        {{ retryLabel }}
+      </button>
+    </div>
+  </section>
+</ng-container>

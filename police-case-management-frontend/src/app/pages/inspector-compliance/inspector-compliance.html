@@ -1,0 +1,111 @@
+<div class="container mt-4">
+  <h3 class="mb-3">Inspector Compliance</h3>
+
+  <div role="group" aria-label="Filter compliance" class="sort-tabs mb-3" style="--sort-pill-w: 110px;"
+       [class.is-latest]="activeTab === 'new'" 
+       [class.is-oldest]="activeTab === 'working'" 
+       [class.is-third]="activeTab === 'done'">
+    <button type="button" class="sort-btn" (click)="setTab('new')" [class.active]="activeTab === 'new'">
+      <span aria-hidden="true" class="neu-text">
+        <span class="neu-text-primary">
+          <span>N</span><span>e</span><span>w</span>
+        </span>
+        <span class="neu-text-secondary">
+          <span>N</span><span>e</span><span>w</span>
+        </span>
+      </span>
+      <span class="visually-hidden">New</span>
+    </button>
+    <button type="button" class="sort-btn" (click)="setTab('working')" [class.active]="activeTab === 'working'">
+      <span aria-hidden="true" class="neu-text">
+        <span class="neu-text-primary">
+          <span>W</span><span>o</span><span>r</span><span>k</span><span>i</span><span>n</span><span>g</span>
+        </span>
+        <span class="neu-text-secondary">
+          <span>W</span><span>o</span><span>r</span><span>k</span><span>i</span><span>n</span><span>g</span>
+        </span>
+      </span>
+      <span class="visually-hidden">Working</span>
+    </button>
+    <button type="button" class="sort-btn" (click)="setTab('done')" [class.active]="activeTab === 'done'">
+      <span aria-hidden="true" class="neu-text">
+        <span class="neu-text-primary">
+          <span>D</span><span>o</span><span>n</span><span>e</span>
+        </span>
+        <span class="neu-text-secondary">
+          <span>D</span><span>o</span><span>n</span><span>e</span>
+        </span>
+      </span>
+      <span class="visually-hidden">Done</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading">Loading complaints...</div>
+  <div *ngIf="!loading && complaints.length === 0" class="alert alert-info">No complaints found.</div>
+
+  <ng-container *ngFor="let group of groupedComplaints; trackBy: trackByGroup">
+    <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+    <article *ngFor="let item of group.items; trackBy: trackByComplaint" class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h3 class="card-title mb-2">
+              <a
+                class="compliance-link"
+                [routerLink]="['/commissioner/inspector-compliance', item._id]"
+              >
+                {{ item.inspector_name }} ({{ item.inspector_police_id }})
+              </a>
+            </h3>
+            <p class="card-text mb-2 compliance-action-text" *ngIf="activeTab === 'done'">
+              <b>Action taken:</b> 
+              <ng-container *ngIf="item.commissioner_note">{{ item.commissioner_note }}</ng-container>
+              <ng-container *ngIf="!item.commissioner_note">Reviewed and marked accordingly.</ng-container>
+            </p>
+            <p class="card-text mb-1"><b>Complaint by:</b> {{ item.citizen_name }}</p>
+            <p class="card-text mb-1"><b>Submitted:</b> {{ item.createdAt | date: 'dd-MM-yyyy HH:mm' }}</p>
+            <p class="card-text mb-0 mt-2" *ngIf="evidenceName(item)"><b>Evidence:</b> {{ evidenceName(item) }}</p>
+          </div>
+
+          <div class="d-flex gap-2 flex-shrink-0" *ngIf="activeTab === 'new'">
+            <button class="pending-action-btn pending-check-btn neu-button" style="white-space: nowrap;" (click)="markWorking(item._id)" [disabled]="actingId === item._id">
+              <span class="span-mother" aria-hidden="true"><span>M</span><span>a</span><span>r</span><span>k</span><span>&nbsp;</span><span>a</span><span>s</span><span>&nbsp;</span><span>U</span><span>n</span><span>d</span><span>e</span><span>r</span><span>&nbsp;</span><span>W</span><span>o</span><span>r</span><span>k</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>M</span><span>a</span><span>r</span><span>k</span><span>&nbsp;</span><span>a</span><span>s</span><span>&nbsp;</span><span>U</span><span>n</span><span>d</span><span>e</span><span>r</span><span>&nbsp;</span><span>W</span><span>o</span><span>r</span><span>k</span></span>
+              <span class="visually-hidden">Mark as Under Work</span>
+            </button>
+            <button class="pending-action-btn pending-reject-btn neu-button" style="white-space: nowrap;" (click)="reject(item._id)" [disabled]="actingId === item._id">
+              <span class="span-mother" aria-hidden="true"><span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span></span>
+              <span class="visually-hidden">Reject</span>
+            </button>
+          </div>
+          <div class="d-flex gap-2 flex-shrink-0" *ngIf="activeTab === 'working'">
+            <button class="pending-action-btn pending-approve-btn neu-button" style="white-space: nowrap;" (click)="complete(item._id, item.inspector_name, item.inspector_police_id)" [disabled]="actingId === item._id">
+              <span class="span-mother" aria-hidden="true"><span>C</span><span>o</span><span>m</span><span>p</span><span>l</span><span>e</span><span>t</span><span>e</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>C</span><span>o</span><span>m</span><span>p</span><span>l</span><span>e</span><span>t</span><span>e</span></span>
+              <span class="visually-hidden">Complete</span>
+            </button>
+            <button class="pending-action-btn pending-reject-btn neu-button" style="white-space: nowrap;" (click)="markFake(item._id)" [disabled]="actingId === item._id">
+              <span class="span-mother" aria-hidden="true"><span>M</span><span>a</span><span>r</span><span>k</span><span>&nbsp;</span><span>a</span><span>s</span><span>&nbsp;</span><span>F</span><span>a</span><span>k</span><span>e</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>M</span><span>a</span><span>r</span><span>k</span><span>&nbsp;</span><span>a</span><span>s</span><span>&nbsp;</span><span>F</span><span>a</span><span>k</span><span>e</span></span>
+              <span class="visually-hidden">Mark as Fake</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </ng-container>
+
+  <div class="list-pagination" *ngIf="totalComplaints > 0">
+    <div class="page-summary">{{ pageSummary }}</div>
+    <div class="page-buttons">
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+      <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+      <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+  </div>
+</div>

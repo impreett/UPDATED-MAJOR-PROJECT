@@ -1,0 +1,120 @@
+<div class="container mt-4">
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading complaints"
+    loadingMessage="Fetching your latest complaints..."
+    emptyTitle="No complaints yet"
+    emptyMessage="You have not reported any inspector yet."
+    (retry)="fetchComplaints()"
+  ></app-state-panel>
+
+  <div
+    *ngIf="!loading && !errorMessage && totalComplaints > 0"
+    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"
+  >
+    <h2 class="mb-0">Submitted complaints</h2>
+    <span class="fw-semibold ms-auto">Sort:</span>
+    <div class="sort-tabs" [class.is-latest]="sortOrder === 'latest'" [class.is-oldest]="sortOrder === 'oldest'">
+      <button type="button" class="sort-btn" [class.active]="sortOrder === 'latest'" (click)="setSort('latest')">
+        <span class="neu-text" aria-hidden="true">
+          <span class="neu-text-primary">
+            <span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span>
+          </span>
+          <span class="neu-text-secondary">
+            <span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span>
+          </span>
+        </span>
+        <span class="visually-hidden">Latest</span>
+      </button>
+      <button type="button" class="sort-btn" [class.active]="sortOrder === 'oldest'" (click)="setSort('oldest')">
+        <span class="neu-text" aria-hidden="true">
+          <span class="neu-text-primary">
+            <span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span>
+          </span>
+          <span class="neu-text-secondary">
+            <span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span>
+          </span>
+        </span>
+        <span class="visually-hidden">Oldest</span>
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading && !errorMessage && totalComplaints > 0">
+    <ng-container *ngFor="let group of groupedComplaints; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <ng-container *ngFor="let complaint of group.items; let isLast = last; trackBy: trackByComplaint">
+        <article class="card complaint-card mb-3">
+          <div class="card-body">
+            <h3 class="card-title mb-2">
+              <a
+                class="complaint-link"
+                [routerLink]="['/citizen/complaints', complaint._id]"
+              >
+                {{ complaint.inspector_name || 'Inspector' }} ({{ complaint.inspector_police_id || 'N/A' }})
+              </a>
+            </h3>
+            <p class="card-text mb-1" *ngIf="actionTaken(complaint) as actionTaken">
+              <b>Action taken:</b> <span class="complaint-action-value">{{ actionTaken }}</span>
+            </p>
+            <p class="card-text mb-1">
+              <b>Status:</b> <span class="complaint-status-value">{{ displayStatus(complaint) }}</span>
+            </p>
+            <p class="card-text mb-1"><b>Submitted by:</b> {{ complaint.citizen_name || 'You' }}</p>
+            <p class="card-text mb-1"><b>Submitted:</b> {{ complaint.createdAt | date: 'dd-MM-yyyy HH:mm' }}</p>
+            <p class="card-text mb-1"><b>Evidence:</b> {{ evidenceName(complaint) }}</p>
+            <div class="complaint-actions">
+              <a
+                class="pending-action-btn pending-check-btn neu-button"
+                [routerLink]="['/citizen/complaints', complaint._id]"
+              >
+                <span class="span-mother" aria-hidden="true"><span>V</span><span>i</span><span>e</span><span>w</span></span>
+                <span class="span-mother2" aria-hidden="true"><span>V</span><span>i</span><span>e</span><span>w</span></span>
+                <span class="visually-hidden">View details</span>
+              </a>
+              <a
+                class="pending-action-btn pending-approve-btn neu-button"
+                [routerLink]="['/citizen/complaints', complaint._id, 'edit']"
+                *ngIf="canEdit(complaint)"
+              >
+                <span class="span-mother" aria-hidden="true">
+                  <span>E</span><span>d</span><span>i</span><span>t</span><span>&nbsp;</span><span>/</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>e</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+                </span>
+                <span class="span-mother2" aria-hidden="true">
+                  <span>E</span><span>d</span><span>i</span><span>t</span><span>&nbsp;</span><span>/</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>e</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+                </span>
+                <span class="visually-hidden">Edit or add evidence</span>
+              </a>
+              <button
+                type="button"
+                class="pending-action-btn pending-reject-btn neu-button"
+                *ngIf="canWithdraw(complaint)"
+                [disabled]="withdrawingId === complaint._id"
+                (click)="withdrawComplaint(complaint)"
+              >
+                <span class="span-mother" aria-hidden="true"><span>W</span><span>i</span><span>t</span><span>h</span><span>d</span><span>r</span><span>a</span><span>w</span></span>
+                <span class="span-mother2" aria-hidden="true"><span>W</span><span>i</span><span>t</span><span>h</span><span>d</span><span>r</span><span>a</span><span>w</span></span>
+                <span class="visually-hidden">Withdraw complaint</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      </ng-container>
+    </ng-container>
+
+    <div class="list-pagination" *ngIf="totalComplaints > 0">
+      <div class="page-summary">{{ pageSummary }}</div>
+      <div class="page-buttons">
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="prevPage()" [disabled]="currentPage === 1">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+        <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

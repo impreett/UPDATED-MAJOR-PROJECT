@@ -1,0 +1,1760 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+@font-face {
+  font-family: "TikTok Sans";
+  src: url("/assets/fonts/TikTok_Sans/TikTokSans-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TikTok Sans";
+  src: url("/assets/fonts/TikTok_Sans/TikTokSans-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --ui-scale: 0.9;
+  --segmented-control-h: 32px;
+  --segmented-control-pad: 3px;
+  --segmented-control-wrap-h: 42px;
+  --bs-body-font-family: "TikTok Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+html {
+  scrollbar-gutter: stable;
+  height: 100%;
+  font-size: 90%;
+}
+
+body {
+  background: #f1f1f1 !important;
+  margin: 0;
+  min-height: 100%;
+  font-family: "TikTok Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+app-root {
+  display: block;
+  min-height: 100%;
+}
+
+.public-page-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.public-page-content {
+  flex: 1 1 auto;
+}
+
+.public-page-shell app-footer,
+.public-page-shell > footer {
+  margin-top: auto;
+}
+
+.public-header-logo {
+  height: 100px;
+  width: auto;
+  margin-right: 15px;
+  filter: brightness(0) invert(1);
+}
+
+.password-toggle {
+  position: relative;
+}
+
+.password-toggle .form-control {
+  padding-right: 2.75rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.75rem;
+  border: 0;
+  background: transparent;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid #2f6fde;
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.password-toggle-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.password-toggle-btn .icon-eye-on {
+  display: none;
+}
+
+.password-toggle-btn.is-active .icon-eye-on {
+  display: inline;
+}
+
+.password-toggle-btn.is-active .icon-eye-off {
+  display: none;
+}
+
+body.dark-mode .password-toggle-btn {
+  color: #cbd5e1;
+}
+
+body.dark-mode .password-toggle-btn:focus-visible {
+  outline-color: #7fb1ff;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+footer {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 0;
+}
+
+.alert {
+  --alert-neu-bg: #f1f4f8;
+  --alert-neu-inset-dark: #d7dde6;
+  --alert-neu-outer-dark: #cfd6e0;
+  --alert-neu-border: #d4dbe6;
+  --alert-neu-text: #2f3d52;
+  border: 2px solid var(--alert-neu-border) !important;
+  border-radius: 14px !important;
+  background: var(--alert-neu-bg) !important;
+  color: var(--alert-neu-text) !important;
+  box-shadow:
+    inset 4px 4px 10px var(--alert-neu-inset-dark),
+    inset -4px -4px 10px #ffffff,
+    2px 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.alert.alert-success {
+  --alert-neu-bg: #eaf8ef;
+  --alert-neu-inset-dark: #c4e7d0;
+  --alert-neu-outer-dark: #b6ddc4;
+  --alert-neu-border: #b5dbbe;
+  --alert-neu-text: #2f7b45;
+}
+
+.alert.alert-danger {
+  --alert-neu-bg: #fdeeee;
+  --alert-neu-inset-dark: #f3c6c6;
+  --alert-neu-outer-dark: #e7b7b7;
+  --alert-neu-border: #f0c5c5;
+  --alert-neu-text: #9d2c2c;
+}
+
+.alert.alert-info {
+  --alert-neu-bg: #ececec;
+  --alert-neu-inset-dark: #d0d0d0;
+  --alert-neu-outer-dark: #c4c4c4;
+  --alert-neu-border: #d8d8d8;
+  --alert-neu-text: #3f3f3f;
+}
+
+.alert.alert-warning {
+  --alert-neu-bg: #fff6e5;
+  --alert-neu-inset-dark: #efdcb5;
+  --alert-neu-outer-dark: #e7d4a9;
+  --alert-neu-border: #ecd6a9;
+  --alert-neu-text: #7a5a20;
+}
+
+.alert.alert-light {
+  --alert-neu-bg: #f8f9fb;
+  --alert-neu-inset-dark: #dde3ea;
+  --alert-neu-outer-dark: #d6dde6;
+  --alert-neu-border: #dee4ec;
+  --alert-neu-text: #2f3d52;
+}
+
+.alert .btn-close {
+  opacity: 0.7;
+}
+
+.app-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  background: rgba(20, 24, 36, 0.36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.app-confirm-card {
+  width: min(460px, 100%);
+  padding: 16px 18px;
+}
+
+.app-confirm-text {
+  color: #303747;
+}
+
+body.dark-mode .app-confirm-text {
+  color: #dce5ef;
+}
+
+.app-confirm-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.app-confirm-actions .pending-action-btn {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 576px) {
+  .app-confirm-actions {
+    flex-direction: column;
+  }
+
+  .app-confirm-actions .pending-action-btn {
+    width: 100%;
+  }
+}
+
+.pending-user-surface {
+  border: none !important;
+  border-radius: 14px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfaff 100%) !important;
+  box-shadow: 0 10px 20px rgba(54, 33, 86, 0.08);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.pending-user-surface:hover {
+  box-shadow: 0 12px 24px rgba(54, 33, 86, 0.11);
+}
+
+.pending-user-surface.card {
+  overflow: hidden;
+}
+
+.pending-user-surface.card .card-header {
+  border-bottom: 1px solid #e9e1f1;
+  background: linear-gradient(180deg, #f8f4ff 0%, #f3edff 100%);
+}
+
+article.card.mb-3,
+article.case-details-card,
+article.pending-user-card,
+article.active-user-card {
+  border: 1px solid #e3dceb !important;
+  border-radius: 14px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfaff 100%) !important;
+  box-shadow: 0 10px 20px rgba(54, 33, 86, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+article.card.mb-3:hover,
+article.case-details-card:hover,
+article.pending-user-card:hover,
+article.active-user-card:hover {
+  box-shadow: 0 12px 24px rgba(54, 33, 86, 0.11);
+}
+
+.card-title a {
+  color: #000;
+  text-decoration: none !important;
+  position: relative;
+  display: inline-block;
+}
+
+.card-title a:hover {
+  text-decoration: none !important;
+}
+
+.card-title a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.24s ease;
+}
+
+.card-title a:hover::after,
+.card-title a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.search-result-title .result-title-link {
+  color: #000;
+  text-decoration: none !important;
+  position: relative;
+  display: inline-block;
+}
+
+body.dark-mode {
+  background: #10151c !important;
+  color: #dce5ef;
+}
+
+body.dark-mode .layout-main {
+  background: #10151c;
+}
+
+body.dark-mode header.site-header,
+body.dark-mode footer {
+  background: #0b1016 !important;
+}
+
+body.dark-mode article.card.mb-3,
+body.dark-mode article.case-details-card,
+body.dark-mode article.pending-user-card,
+body.dark-mode article.active-user-card,
+body.dark-mode .card,
+body.dark-mode .pending-user-surface,
+body.dark-mode .login-form-card,
+body.dark-mode .register-form-card,
+body.dark-mode .otp-form-card {
+  background: #18212c !important;
+  color: #dce5ef !important;
+  border-color: #2c3848 !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .card-title a,
+body.dark-mode .search-result-title .result-title-link {
+  color: #f5f8fc;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select,
+body.dark-mode textarea {
+  background: #121922;
+  color: #dce5ef;
+  border-color: #334154;
+}
+
+body.dark-mode .pagination .page-link {
+  background: #121922;
+  color: #dce5ef;
+  border-color: #334154;
+}
+
+body.dark-mode .pagination .page-item.disabled .page-link {
+  background: #0f141b;
+  color: #7f90a6;
+  border-color: #273141;
+}
+
+body.dark-mode .pagination .page-item.active .page-link {
+  background: #223145;
+  color: #f5f8fc;
+  border-color: #3a4c63;
+}
+
+body.dark-mode .form-label,
+body.dark-mode .form-check-label,
+body.dark-mode .col-form-label {
+  color: #cdd9e8 !important;
+}
+
+/* Show required-style indicator only on required labels. */
+.form-label.required::after,
+.form-check-label.required::after,
+.col-form-label.required::after {
+  content: ' *';
+  color: #d93025;
+  font-weight: 600;
+}
+
+body.dark-mode .text-muted {
+  color: #9fb0c5 !important;
+}
+
+body.dark-mode .invalid-feedback {
+  color: #ff9aa7 !important;
+}
+
+body.dark-mode .form-control::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #8fa2b8 !important;
+  opacity: 1;
+}
+
+body.dark-mode input[type='date']::-webkit-datetime-edit {
+  color: #dce5ef;
+}
+
+body.dark-mode input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(0.86) hue-rotate(180deg) saturate(0.45);
+  opacity: 0.95;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus,
+body.dark-mode textarea:focus {
+  background: #121922;
+  color: #dce5ef;
+  border-color: #5f7ea3;
+  box-shadow: 0 0 0 0.2rem rgba(95, 126, 163, 0.2);
+}
+
+body.dark-mode .alert {
+  background: #19222f !important;
+  color: #dce5ef !important;
+  border-color: #2f3d4e !important;
+}
+
+body.dark-mode .text-secondary,
+body.dark-mode .month-badge {
+  color: #9fb0c5 !important;
+}
+
+body.dark-mode .month-year-heading::after {
+  background-color: #2f3d4e !important;
+}
+
+body.dark-mode .tabs,
+body.dark-mode .sort-tabs {
+  background-color: #1a2430 !important;
+  border-color: #314152 !important;
+  box-shadow: inset 4px 4px 10px #121a24, inset -4px -4px 10px #243241 !important;
+}
+
+body.dark-mode .glider,
+body.dark-mode .sort-tabs::before {
+  background: linear-gradient(145deg, #1d2a39, #243547) !important;
+  box-shadow: 2px 2px 6px #111823, -2px -2px 6px #304257 !important;
+}
+
+body.dark-mode .tab,
+body.dark-mode .sort-tabs .sort-btn {
+  color: #a9bbd2 !important;
+}
+
+body.dark-mode .tab:hover,
+body.dark-mode .filter-tabs input[type='radio']:checked + label,
+body.dark-mode .sort-tabs .sort-btn:hover,
+body.dark-mode .sort-tabs .sort-btn.active {
+  color: #8cc1ff !important;
+}
+
+body.dark-mode .sort-tabs .sort-btn:focus-visible {
+  outline-color: #8cc1ff;
+}
+
+body.dark-mode .desc-box {
+  background: #253243 !important;
+  color: #dce5ef !important;
+}
+
+body.dark-mode .desc-value-bg {
+  background: #131b25 !important;
+  border-color: #2f3d4e !important;
+  color: #dce5ef !important;
+}
+
+/* Case details evidence in dark mode */
+body.dark-mode .evidence-item {
+  background: #131b25 !important;
+  border-color: #2f3d4e !important;
+  color: #dce5ef !important;
+}
+
+body.dark-mode .evidence-file-label {
+  color: #cdd9e8 !important;
+}
+
+body.dark-mode .evidence-link {
+  color: #8cc1ff !important;
+}
+
+body.dark-mode .case-title-divider {
+  border-top-color: #4a6078 !important;
+}
+
+body.dark-mode .active-users-hero,
+body.dark-mode .pending-users-hero {
+  background: linear-gradient(135deg, #1a2431 0%, #17212c 52%, #131b24 100%) !important;
+  border-color: #2f3e51 !important;
+}
+
+body.dark-mode .metric-card {
+  background: #1a2633 !important;
+  border-color: #304054 !important;
+}
+
+body.dark-mode .metric-label {
+  color: #9ab0c8 !important;
+}
+
+body.dark-mode .metric-value,
+body.dark-mode .active-user-name,
+body.dark-mode .pending-user-name,
+body.dark-mode .active-user-details,
+body.dark-mode .pending-user-details {
+  color: #dce5ef !important;
+}
+
+body.dark-mode .active-user-city,
+body.dark-mode .pending-user-city {
+  background: #22364d !important;
+  border-color: #37506b !important;
+  color: #c9dbef !important;
+}
+
+body.dark-mode .pending-user-status {
+  background: #3a2d16 !important;
+  border-color: #6d5531 !important;
+  color: #f0d8a6 !important;
+}
+
+body.dark-mode .status-dot {
+  background: #f0b963 !important;
+}
+
+body.dark-mode .login-page-content,
+body.dark-mode .register-page-content,
+body.dark-mode .otp-page-content {
+  background-image: linear-gradient(rgba(12, 16, 22, 0.82), rgba(12, 16, 22, 0.9)),
+    url("/assets/register-police-bg.jpg") !important;
+}
+
+body.dark-mode .remember-me-label,
+body.dark-mode .remember-me-label:hover {
+  color: #dce5ef !important;
+}
+
+body.dark-mode .remember-me-checkbox {
+  border-color: #3a4b5f !important;
+  background: #141c27 !important;
+  box-shadow: inset 2px 2px 5px #0f151e, inset -2px -2px 5px #213142 !important;
+}
+
+body.dark-mode .remember-me-checkbox::after {
+  border-color: #dce5ef !important;
+}
+
+body.dark-mode .login-error-card p,
+body.dark-mode .register-success-card p,
+body.dark-mode .update-success-card p {
+  color: #dce5ef !important;
+}
+
+body.dark-mode .otp-status-info,
+body.dark-mode .otp-resend-row a.disabled,
+body.dark-mode .otp-cooldown {
+  color: #b7c6d8 !important;
+}
+
+body.dark-mode .form-select option {
+  background: #121922;
+  color: #dce5ef;
+}
+
+body.dark-mode .btn-outline-secondary {
+  color: #c7d6e8;
+  border-color: #4c6078;
+}
+
+body.dark-mode .btn-outline-secondary:hover {
+  background: #263649;
+  color: #f5f8fc;
+  border-color: #5b7390;
+}
+
+body.dark-mode .search-highlight,
+body.dark-mode .search-highlight-inline {
+  background-color: #f4c95d !important;
+  color: #1a1f27 !important;
+}
+
+.search-result-title .result-title-link:hover {
+  text-decoration: none !important;
+}
+
+.search-result-title .result-title-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.24s ease;
+}
+
+.search-result-title .result-title-link:hover::after,
+.search-result-title .result-title-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+label.error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.form-control.error,
+.form-select.error {
+  border-color: #dc3545;
+}
+
+.desc-box {
+  background: #9d9d9dff;
+  color: #000;
+  border-radius: 8px;
+  padding: 12px 14px;
+  line-height: 1.6;
+}
+
+.search-highlight-inline {
+  background-color: #ffe58f;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  display: inline;
+  line-height: inherit;
+}
+
+.search-result-article {
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.search-result-article .detail-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: baseline;
+  margin-bottom: 0.7rem;
+}
+
+.search-result-article .detail-label {
+  white-space: nowrap;
+}
+
+.search-result-article .detail-value {
+  word-break: break-word;
+}
+
+.search-result-article .people-lines {
+  display: grid;
+  grid-template-columns: var(--people-name-col, max-content) max-content;
+  column-gap: 12px;
+  row-gap: 2px;
+  align-items: baseline;
+}
+
+.search-result-article .person-line {
+  display: contents;
+}
+
+.search-result-article .person-name-part {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.search-result-article .person-age-part {
+  white-space: nowrap;
+}
+
+.search-result-article .desc-row {
+  align-items: baseline;
+}
+
+.search-result-article .desc-value-bg {
+  display: block;
+  background: #f3f5f8;
+  border: 1px solid #e0e5eb;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-left: -10px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.search-result-article.search-title-only-card {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.search-result-article.search-title-only-card .search-result-title {
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+
+@media (max-width: 576px) {
+  .search-result-article .detail-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 4px;
+  }
+
+  .search-result-article .people-lines {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sort-tabs {
+  --sort-pill-w: 96px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  background-color: #e0e0e0;
+  border: 2px solid #cecece;
+  box-shadow: inset 4px 4px 10px #bcbcbc, inset -4px -4px 10px #ffffff;
+  padding: var(--segmented-control-pad);
+  height: var(--segmented-control-wrap-h);
+  min-height: var(--segmented-control-wrap-h);
+  border-radius: 999px;
+  isolation: isolate;
+  box-sizing: border-box;
+}
+
+.sort-tabs::before {
+  content: "";
+  position: absolute;
+  top: var(--segmented-control-pad);
+  bottom: var(--segmented-control-pad);
+  left: var(--segmented-control-pad);
+  width: var(--sort-pill-w);
+  background: linear-gradient(145deg, #d5d5d5, #efefef);
+  border-radius: 999px;
+  box-shadow: 2px 2px 5px #bcbcbc, -2px -2px 5px #ffffff;
+  z-index: 0;
+  transition: transform 0.22s ease-out;
+}
+
+.sort-tabs.is-latest::before {
+  transform: translateX(0);
+}
+
+.sort-tabs.is-oldest::before {
+  transform: translateX(var(--sort-pill-w));
+}
+
+.sort-tabs.is-third::before {
+  transform: translateX(calc(var(--sort-pill-w) * 2));
+}
+
+.sort-tabs .sort-btn {
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--segmented-control-h);
+  width: var(--sort-pill-w);
+  padding: 0 0.85rem;
+  font-size: 0.8rem;
+  color: #4d4d4d;
+  font-weight: 700;
+  border-radius: 999px;
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+  margin: 0;
+  transition: color 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .sort-tabs {
+    transform: scale(0.75);
+    transform-origin: left center;
+  }
+}
+
+.sort-tabs .sort-btn:hover {
+  color: #1d4eaa;
+}
+
+.sort-tabs .sort-btn.active {
+  color: #1d4eaa;
+}
+
+.sort-tabs .sort-btn:focus-visible {
+  outline: 2px solid #1d4eaa;
+  outline-offset: 1px;
+}
+
+.neu-text {
+  display: inline-flex;
+  position: relative;
+  overflow: hidden;
+  line-height: 1.15;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.neu-text-primary,
+.neu-text-secondary {
+  display: inline-flex;
+}
+
+.neu-text-secondary {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.neu-text-primary span,
+.neu-text-secondary span {
+  display: inline-block;
+  min-width: 0.08em;
+  transition: transform 0.25s ease-in-out;
+}
+
+.neu-text-secondary span {
+  transform: translateY(-1.2em);
+}
+
+.sort-btn:hover .neu-text-primary span,
+.tab:hover .neu-text-primary span {
+  transform: translateY(1.2em);
+}
+
+.sort-btn:hover .neu-text-secondary span,
+.tab:hover .neu-text-secondary span {
+  transform: translateY(0);
+}
+
+.neu-text-primary span:nth-child(1),
+.neu-text-secondary span:nth-child(1) {
+  transition-delay: 0.02s;
+}
+
+.neu-text-primary span:nth-child(2),
+.neu-text-secondary span:nth-child(2) {
+  transition-delay: 0.04s;
+}
+
+.neu-text-primary span:nth-child(3),
+.neu-text-secondary span:nth-child(3) {
+  transition-delay: 0.06s;
+}
+
+.neu-text-primary span:nth-child(4),
+.neu-text-secondary span:nth-child(4) {
+  transition-delay: 0.08s;
+}
+
+.neu-text-primary span:nth-child(5),
+.neu-text-secondary span:nth-child(5) {
+  transition-delay: 0.1s;
+}
+
+.neu-text-primary span:nth-child(6),
+.neu-text-secondary span:nth-child(6) {
+  transition-delay: 0.12s;
+}
+
+.neu-text-primary span:nth-child(7),
+.neu-text-secondary span:nth-child(7) {
+  transition-delay: 0.14s;
+}
+
+.neu-text-primary span:nth-child(8),
+.neu-text-secondary span:nth-child(8) {
+  transition-delay: 0.16s;
+}
+
+.neu-text-primary span:nth-child(9),
+.neu-text-secondary span:nth-child(9) {
+  transition-delay: 0.18s;
+}
+
+.neu-text-primary span:nth-child(10),
+.neu-text-secondary span:nth-child(10) {
+  transition-delay: 0.2s;
+}
+
+.neu-text-primary span:nth-child(11),
+.neu-text-secondary span:nth-child(11) {
+  transition-delay: 0.22s;
+}
+
+.neu-text-primary span:nth-child(12),
+.neu-text-secondary span:nth-child(12) {
+  transition-delay: 0.24s;
+}
+
+.neu-text-primary span:nth-child(13),
+.neu-text-secondary span:nth-child(13) {
+  transition-delay: 0.26s;
+}
+
+.neu-text-primary span:nth-child(14),
+.neu-text-secondary span:nth-child(14) {
+  transition-delay: 0.28s;
+}
+
+.neu-text-primary span:nth-child(15),
+.neu-text-secondary span:nth-child(15) {
+  transition-delay: 0.3s;
+}
+
+.neu-text-primary span:nth-child(16),
+.neu-text-secondary span:nth-child(16) {
+  transition-delay: 0.32s;
+}
+
+.neu-text-primary span:nth-child(17),
+.neu-text-secondary span:nth-child(17) {
+  transition-delay: 0.34s;
+}
+
+.neu-text-primary span:nth-child(18),
+.neu-text-secondary span:nth-child(18) {
+  transition-delay: 0.36s;
+}
+
+.neu-text-primary span:nth-child(19),
+.neu-text-secondary span:nth-child(19) {
+  transition-delay: 0.38s;
+}
+
+.neu-text-primary span:nth-child(20),
+.neu-text-secondary span:nth-child(20) {
+  transition-delay: 0.4s;
+}
+
+.neu-text-primary span:nth-child(21),
+.neu-text-secondary span:nth-child(21) {
+  transition-delay: 0.42s;
+}
+
+.neu-text-primary span:nth-child(22),
+.neu-text-secondary span:nth-child(22) {
+  transition-delay: 0.44s;
+}
+
+.neu-text-primary span:nth-child(23),
+.neu-text-secondary span:nth-child(23) {
+  transition-delay: 0.46s;
+}
+
+.neu-text-primary span:nth-child(24),
+.neu-text-secondary span:nth-child(24) {
+  transition-delay: 0.48s;
+}
+
+.neu-text-primary span:nth-child(25),
+.neu-text-secondary span:nth-child(25) {
+  transition-delay: 0.5s;
+}
+
+.neu-text-primary span:nth-child(26),
+.neu-text-secondary span:nth-child(26) {
+  transition-delay: 0.52s;
+}
+
+.neu-text-primary span:nth-child(27),
+.neu-text-secondary span:nth-child(27) {
+  transition-delay: 0.54s;
+}
+
+.neu-text-primary span:nth-child(28),
+.neu-text-secondary span:nth-child(28) {
+  transition-delay: 0.56s;
+}
+
+.neu-text-primary span:nth-child(29),
+.neu-text-secondary span:nth-child(29) {
+  transition-delay: 0.58s;
+}
+
+.neu-text-primary span:nth-child(30),
+.neu-text-secondary span:nth-child(30) {
+  transition-delay: 0.6s;
+}
+
+.person-add-btn.neu-button,
+.case-update-btn.neu-button {
+  --neu-bg: #eaf3ff;
+  --neu-inset-dark: #c0d6f2;
+  --neu-outer-dark: #b8cff0;
+  --neu-border: #bed4f1;
+  --neu-text: #2f5f9f;
+  background-color: var(--neu-bg);
+  border-radius: 50px;
+  box-shadow: inset 4px 4px 10px var(--neu-inset-dark), inset -4px -4px 10px #ffffff;
+  color: var(--neu-text);
+  cursor: pointer;
+  font-size: 0.86rem;
+  padding: 7px 16px;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid var(--neu-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  position: relative;
+  min-height: 34px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+a.case-update-btn.neu-button,
+a.case-update-btn.neu-button:visited {
+  color: var(--neu-text);
+}
+
+a.case-cancel-btn.neu-button,
+a.case-cancel-btn.neu-button:visited {
+  color: var(--neu-text);
+}
+
+.case-update-btn.neu-button {
+  --neu-bg: #eaf8ef;
+  --neu-inset-dark: #c4e7d0;
+  --neu-outer-dark: #b6ddc4;
+  --neu-border: #b5dbbe;
+  --neu-text: #2f7b45;
+  padding: 8px 20px;
+}
+
+.case-cancel-btn.neu-button {
+  --neu-bg: #fdeeee;
+  --neu-inset-dark: #f3c6c6;
+  --neu-outer-dark: #e7b7b7;
+  --neu-border: #f0c5c5;
+  --neu-text: #9d2c2c;
+}
+
+.person-add-btn.neu-button:hover,
+.case-update-btn.neu-button:hover {
+  box-shadow:
+    inset 2px 2px 5px var(--neu-inset-dark),
+    inset -2px -2px 5px #ffffff,
+    2px 2px 5px var(--neu-outer-dark),
+    -2px -2px 5px #ffffff;
+}
+
+.person-add-btn.neu-button:focus-visible,
+.case-update-btn.neu-button:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 2px 2px 5px var(--neu-inset-dark),
+    inset -2px -2px 5px #ffffff,
+    2px 2px 5px var(--neu-outer-dark),
+    -2px -2px 5px #ffffff;
+}
+
+.person-add-btn.neu-button .span-mother,
+.case-update-btn.neu-button .span-mother {
+  display: flex;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.person-add-btn.neu-button:hover .span-mother,
+.case-update-btn.neu-button:hover .span-mother {
+  position: relative;
+}
+
+.person-add-btn.neu-button:hover .span-mother span,
+.case-update-btn.neu-button:hover .span-mother span {
+  transform: translateY(1.2em);
+}
+
+.person-add-btn.neu-button .span-mother2,
+.case-update-btn.neu-button .span-mother2 {
+  display: flex;
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.person-add-btn.neu-button .span-mother2 span,
+.case-update-btn.neu-button .span-mother2 span {
+  transform: translateY(-1.2em);
+}
+
+.person-add-btn.neu-button:hover .span-mother2 span,
+.case-update-btn.neu-button:hover .span-mother2 span {
+  transform: translateY(0);
+}
+
+.person-add-btn.neu-button .span-mother span,
+.person-add-btn.neu-button .span-mother2 span,
+.case-update-btn.neu-button .span-mother span,
+.case-update-btn.neu-button .span-mother2 span {
+  display: inline-block;
+}
+
+.pending-action-btn.neu-button {
+  --neu-bg: #eaf8ef;
+  --neu-inset-dark: #c4e7d0;
+  --neu-outer-dark: #b6ddc4;
+  --neu-border: #b5dbbe;
+  --neu-text: #2f7b45;
+  background-color: var(--neu-bg);
+  border-radius: 50px;
+  box-shadow: inset 4px 4px 10px var(--neu-inset-dark), inset -4px -4px 10px #ffffff;
+  color: var(--neu-text);
+  cursor: pointer;
+  font-size: 0.84rem;
+  padding: 7px 14px;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid var(--neu-border);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  position: relative;
+  min-height: 34px;
+  min-width: 132px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-decoration: none;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.pending-action-btn.pending-approve-btn {
+  --neu-bg: #eaf8ef;
+  --neu-inset-dark: #c4e7d0;
+  --neu-outer-dark: #b6ddc4;
+  --neu-border: #b5dbbe;
+  --neu-text: #2f7b45;
+}
+
+.pending-action-btn.pending-reject-btn {
+  --neu-bg: #fdeeee;
+  --neu-inset-dark: #f3c6c6;
+  --neu-outer-dark: #e7b7b7;
+  --neu-border: #f0c5c5;
+  --neu-text: #9d2c2c;
+}
+
+.pending-action-btn.pending-check-btn {
+  --neu-bg: #ececec;
+  --neu-inset-dark: #d0d0d0;
+  --neu-outer-dark: #c4c4c4;
+  --neu-border: #d8d8d8;
+  --neu-text: #3f3f3f;
+}
+
+a.pending-action-btn.neu-button,
+a.pending-action-btn.neu-button:visited {
+  color: var(--neu-text);
+}
+
+.pending-action-btn.neu-button:hover {
+  box-shadow:
+    inset 2px 2px 5px var(--neu-inset-dark),
+    inset -2px -2px 5px #ffffff,
+    2px 2px 5px var(--neu-outer-dark),
+    -2px -2px 5px #ffffff;
+}
+
+.pending-action-btn.neu-button:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 2px 2px 5px var(--neu-inset-dark),
+    inset -2px -2px 5px #ffffff,
+    2px 2px 5px var(--neu-outer-dark),
+    -2px -2px 5px #ffffff;
+}
+
+.pending-action-btn.neu-button .span-mother {
+  display: flex;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pending-action-btn.neu-button:hover .span-mother {
+  position: relative;
+}
+
+.pending-action-btn.neu-button:hover .span-mother span {
+  transform: translateY(1.2em);
+}
+
+.pending-action-btn.neu-button .span-mother2 {
+  display: flex;
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pending-action-btn.neu-button .span-mother2 span {
+  transform: translateY(-1.2em);
+}
+
+.pending-action-btn.neu-button:hover .span-mother2 span {
+  transform: translateY(0);
+}
+
+.pending-action-btn.neu-button .span-mother span,
+.pending-action-btn.neu-button .span-mother2 span {
+  display: inline-block;
+  white-space: pre;
+  transition-property: transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.app-timed-alert {
+  position: relative;
+  --app-timed-alert-inset: calc(var(--bs-alert-border-radius, 0.375rem) + 2px);
+}
+
+.app-timed-alert::after {
+  content: '';
+  position: absolute;
+  left: var(--app-timed-alert-inset);
+  right: var(--app-timed-alert-inset);
+  bottom: 4px;
+  height: 3px;
+  border-radius: 999px;
+  background-color: currentColor;
+  opacity: 0.35;
+  transform-origin: right center;
+  animation: app-timed-alert-progress 7s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes app-timed-alert-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Unified Neu Buttons Across App */
+
+.person-add-btn.neu-button,
+.case-update-btn.neu-button,
+.pending-action-btn.neu-button,
+a.pending-action-btn.neu-button,
+a.case-update-btn.neu-button,
+a.case-cancel-btn.neu-button {
+  --neu-bg: #eaf3ff;
+  --neu-inset-dark: #c0d6f2;
+  --neu-outer-dark: #b8cff0;
+  --neu-border: #bed4f1;
+  --neu-text: #2f5f9f;
+  background-color: var(--neu-bg) !important;
+  border-radius: 50px !important;
+  box-shadow: inset 4px 4px 10px var(--neu-inset-dark), inset -4px -4px 10px #ffffff !important;
+  color: var(--neu-text) !important;
+  cursor: pointer;
+  font-size: 0.86rem;
+  padding: 7px 16px;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid var(--neu-border) !important;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  position: relative;
+  min-height: 34px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-decoration: none !important;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.pending-action-btn.neu-button {
+  min-width: 132px;
+  padding: 7px 14px;
+  font-size: 0.84rem;
+}
+
+.pending-action-btn.pending-approve-btn,
+.case-update-btn.neu-button:not(.case-cancel-btn) {
+  --neu-bg: #eaf8ef;
+  --neu-inset-dark: #c4e7d0;
+  --neu-outer-dark: #b6ddc4;
+  --neu-border: #b5dbbe;
+  --neu-text: #2f7b45;
+}
+
+.pending-action-btn.pending-reject-btn,
+.case-cancel-btn.neu-button {
+  --neu-bg: #fdeeee;
+  --neu-inset-dark: #f3c6c6;
+  --neu-outer-dark: #e7b7b7;
+  --neu-border: #f0c5c5;
+  --neu-text: #9d2c2c;
+}
+
+.pending-action-btn.pending-check-btn {
+  --neu-bg: #ececec;
+  --neu-inset-dark: #d0d0d0;
+  --neu-outer-dark: #c4c4c4;
+  --neu-border: #d8d8d8;
+  --neu-text: #3f3f3f;
+}
+
+.person-add-btn.neu-button:hover,
+.case-update-btn.neu-button:hover,
+.pending-action-btn.neu-button:hover,
+a.pending-action-btn.neu-button:hover,
+a.case-update-btn.neu-button:hover,
+a.case-cancel-btn.neu-button:hover {
+  box-shadow:
+    inset 2px 2px 5px var(--neu-inset-dark),
+    inset -2px -2px 5px #ffffff,
+    2px 2px 5px var(--neu-outer-dark),
+    -2px -2px 5px #ffffff !important;
+}
+
+.person-add-btn.neu-button:focus-visible,
+.case-update-btn.neu-button:focus-visible,
+.pending-action-btn.neu-button:focus-visible,
+a.pending-action-btn.neu-button:focus-visible,
+a.case-update-btn.neu-button:focus-visible,
+a.case-cancel-btn.neu-button:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 2px 2px 5px var(--neu-inset-dark),
+    inset -2px -2px 5px #ffffff,
+    2px 2px 5px var(--neu-outer-dark),
+    -2px -2px 5px #ffffff !important;
+}
+
+.person-add-btn.neu-button .span-mother,
+.case-update-btn.neu-button .span-mother,
+.pending-action-btn.neu-button .span-mother {
+  display: flex;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.person-add-btn.neu-button:hover .span-mother,
+.case-update-btn.neu-button:hover .span-mother,
+.pending-action-btn.neu-button:hover .span-mother {
+  position: relative;
+}
+
+.person-add-btn.neu-button:hover .span-mother span,
+.case-update-btn.neu-button:hover .span-mother span,
+.pending-action-btn.neu-button:hover .span-mother span {
+  transform: translateY(1.2em);
+}
+
+.person-add-btn.neu-button .span-mother2,
+.case-update-btn.neu-button .span-mother2,
+.pending-action-btn.neu-button .span-mother2 {
+  display: flex;
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.person-add-btn.neu-button .span-mother2 span,
+.case-update-btn.neu-button .span-mother2 span,
+.pending-action-btn.neu-button .span-mother2 span {
+  transform: translateY(-1.2em);
+}
+
+.person-add-btn.neu-button:hover .span-mother2 span,
+.case-update-btn.neu-button:hover .span-mother2 span,
+.pending-action-btn.neu-button:hover .span-mother2 span {
+  transform: translateY(0);
+}
+
+.person-add-btn.neu-button .span-mother span,
+.person-add-btn.neu-button .span-mother2 span,
+.case-update-btn.neu-button .span-mother span,
+.case-update-btn.neu-button .span-mother2 span,
+.pending-action-btn.neu-button .span-mother span,
+.pending-action-btn.neu-button .span-mother2 span {
+  display: inline-block;
+  white-space: pre;
+  transition-property: transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.person-add-btn.neu-button .span-mother span:nth-child(1),
+.person-add-btn.neu-button .span-mother2 span:nth-child(1),
+.case-update-btn.neu-button .span-mother span:nth-child(1),
+.case-update-btn.neu-button .span-mother2 span:nth-child(1),
+.pending-action-btn.neu-button .span-mother span:nth-child(1),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(1) { transition-delay: 0.02s; }
+.person-add-btn.neu-button .span-mother span:nth-child(2),
+.person-add-btn.neu-button .span-mother2 span:nth-child(2),
+.case-update-btn.neu-button .span-mother span:nth-child(2),
+.case-update-btn.neu-button .span-mother2 span:nth-child(2),
+.pending-action-btn.neu-button .span-mother span:nth-child(2),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(2) { transition-delay: 0.04s; }
+.person-add-btn.neu-button .span-mother span:nth-child(3),
+.person-add-btn.neu-button .span-mother2 span:nth-child(3),
+.case-update-btn.neu-button .span-mother span:nth-child(3),
+.case-update-btn.neu-button .span-mother2 span:nth-child(3),
+.pending-action-btn.neu-button .span-mother span:nth-child(3),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(3) { transition-delay: 0.06s; }
+.person-add-btn.neu-button .span-mother span:nth-child(4),
+.person-add-btn.neu-button .span-mother2 span:nth-child(4),
+.case-update-btn.neu-button .span-mother span:nth-child(4),
+.case-update-btn.neu-button .span-mother2 span:nth-child(4),
+.pending-action-btn.neu-button .span-mother span:nth-child(4),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(4) { transition-delay: 0.08s; }
+.person-add-btn.neu-button .span-mother span:nth-child(5),
+.person-add-btn.neu-button .span-mother2 span:nth-child(5),
+.case-update-btn.neu-button .span-mother span:nth-child(5),
+.case-update-btn.neu-button .span-mother2 span:nth-child(5),
+.pending-action-btn.neu-button .span-mother span:nth-child(5),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(5) { transition-delay: 0.10s; }
+.person-add-btn.neu-button .span-mother span:nth-child(6),
+.person-add-btn.neu-button .span-mother2 span:nth-child(6),
+.case-update-btn.neu-button .span-mother span:nth-child(6),
+.case-update-btn.neu-button .span-mother2 span:nth-child(6),
+.pending-action-btn.neu-button .span-mother span:nth-child(6),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(6) { transition-delay: 0.12s; }
+.person-add-btn.neu-button .span-mother span:nth-child(7),
+.person-add-btn.neu-button .span-mother2 span:nth-child(7),
+.case-update-btn.neu-button .span-mother span:nth-child(7),
+.case-update-btn.neu-button .span-mother2 span:nth-child(7),
+.pending-action-btn.neu-button .span-mother span:nth-child(7),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(7) { transition-delay: 0.14s; }
+.person-add-btn.neu-button .span-mother span:nth-child(8),
+.person-add-btn.neu-button .span-mother2 span:nth-child(8),
+.case-update-btn.neu-button .span-mother span:nth-child(8),
+.case-update-btn.neu-button .span-mother2 span:nth-child(8),
+.pending-action-btn.neu-button .span-mother span:nth-child(8),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(8) { transition-delay: 0.16s; }
+.person-add-btn.neu-button .span-mother span:nth-child(9),
+.person-add-btn.neu-button .span-mother2 span:nth-child(9),
+.case-update-btn.neu-button .span-mother span:nth-child(9),
+.case-update-btn.neu-button .span-mother2 span:nth-child(9),
+.pending-action-btn.neu-button .span-mother span:nth-child(9),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(9) { transition-delay: 0.18s; }
+.person-add-btn.neu-button .span-mother span:nth-child(10),
+.person-add-btn.neu-button .span-mother2 span:nth-child(10),
+.case-update-btn.neu-button .span-mother span:nth-child(10),
+.case-update-btn.neu-button .span-mother2 span:nth-child(10),
+.pending-action-btn.neu-button .span-mother span:nth-child(10),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(10) { transition-delay: 0.20s; }
+.person-add-btn.neu-button .span-mother span:nth-child(11),
+.person-add-btn.neu-button .span-mother2 span:nth-child(11),
+.case-update-btn.neu-button .span-mother span:nth-child(11),
+.case-update-btn.neu-button .span-mother2 span:nth-child(11),
+.pending-action-btn.neu-button .span-mother span:nth-child(11),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(11) { transition-delay: 0.22s; }
+.person-add-btn.neu-button .span-mother span:nth-child(12),
+.person-add-btn.neu-button .span-mother2 span:nth-child(12),
+.case-update-btn.neu-button .span-mother span:nth-child(12),
+.case-update-btn.neu-button .span-mother2 span:nth-child(12),
+.pending-action-btn.neu-button .span-mother span:nth-child(12),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(12) { transition-delay: 0.24s; }
+.person-add-btn.neu-button .span-mother span:nth-child(13),
+.person-add-btn.neu-button .span-mother2 span:nth-child(13),
+.case-update-btn.neu-button .span-mother span:nth-child(13),
+.case-update-btn.neu-button .span-mother2 span:nth-child(13),
+.pending-action-btn.neu-button .span-mother span:nth-child(13),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(13) { transition-delay: 0.26s; }
+.person-add-btn.neu-button .span-mother span:nth-child(14),
+.person-add-btn.neu-button .span-mother2 span:nth-child(14),
+.case-update-btn.neu-button .span-mother span:nth-child(14),
+.case-update-btn.neu-button .span-mother2 span:nth-child(14),
+.pending-action-btn.neu-button .span-mother span:nth-child(14),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(14) { transition-delay: 0.28s; }
+.person-add-btn.neu-button .span-mother span:nth-child(15),
+.person-add-btn.neu-button .span-mother2 span:nth-child(15),
+.case-update-btn.neu-button .span-mother span:nth-child(15),
+.case-update-btn.neu-button .span-mother2 span:nth-child(15),
+.pending-action-btn.neu-button .span-mother span:nth-child(15),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(15) { transition-delay: 0.30s; }
+.person-add-btn.neu-button .span-mother span:nth-child(16),
+.person-add-btn.neu-button .span-mother2 span:nth-child(16),
+.case-update-btn.neu-button .span-mother span:nth-child(16),
+.case-update-btn.neu-button .span-mother2 span:nth-child(16),
+.pending-action-btn.neu-button .span-mother span:nth-child(16),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(16) { transition-delay: 0.32s; }
+.person-add-btn.neu-button .span-mother span:nth-child(17),
+.person-add-btn.neu-button .span-mother2 span:nth-child(17),
+.case-update-btn.neu-button .span-mother span:nth-child(17),
+.case-update-btn.neu-button .span-mother2 span:nth-child(17),
+.pending-action-btn.neu-button .span-mother span:nth-child(17),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(17) { transition-delay: 0.34s; }
+.person-add-btn.neu-button .span-mother span:nth-child(18),
+.person-add-btn.neu-button .span-mother2 span:nth-child(18),
+.case-update-btn.neu-button .span-mother span:nth-child(18),
+.case-update-btn.neu-button .span-mother2 span:nth-child(18),
+.pending-action-btn.neu-button .span-mother span:nth-child(18),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(18) { transition-delay: 0.36s; }
+.person-add-btn.neu-button .span-mother span:nth-child(19),
+.person-add-btn.neu-button .span-mother2 span:nth-child(19),
+.case-update-btn.neu-button .span-mother span:nth-child(19),
+.case-update-btn.neu-button .span-mother2 span:nth-child(19),
+.pending-action-btn.neu-button .span-mother span:nth-child(19),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(19) { transition-delay: 0.38s; }
+.person-add-btn.neu-button .span-mother span:nth-child(20),
+.person-add-btn.neu-button .span-mother2 span:nth-child(20),
+.case-update-btn.neu-button .span-mother span:nth-child(20),
+.case-update-btn.neu-button .span-mother2 span:nth-child(20),
+.pending-action-btn.neu-button .span-mother span:nth-child(20),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(20) { transition-delay: 0.40s; }
+.person-add-btn.neu-button .span-mother span:nth-child(21),
+.person-add-btn.neu-button .span-mother2 span:nth-child(21),
+.case-update-btn.neu-button .span-mother span:nth-child(21),
+.case-update-btn.neu-button .span-mother2 span:nth-child(21),
+.pending-action-btn.neu-button .span-mother span:nth-child(21),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(21) { transition-delay: 0.42s; }
+.person-add-btn.neu-button .span-mother span:nth-child(22),
+.person-add-btn.neu-button .span-mother2 span:nth-child(22),
+.case-update-btn.neu-button .span-mother span:nth-child(22),
+.case-update-btn.neu-button .span-mother2 span:nth-child(22),
+.pending-action-btn.neu-button .span-mother span:nth-child(22),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(22) { transition-delay: 0.44s; }
+.person-add-btn.neu-button .span-mother span:nth-child(23),
+.person-add-btn.neu-button .span-mother2 span:nth-child(23),
+.case-update-btn.neu-button .span-mother span:nth-child(23),
+.case-update-btn.neu-button .span-mother2 span:nth-child(23),
+.pending-action-btn.neu-button .span-mother span:nth-child(23),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(23) { transition-delay: 0.46s; }
+.person-add-btn.neu-button .span-mother span:nth-child(24),
+.person-add-btn.neu-button .span-mother2 span:nth-child(24),
+.case-update-btn.neu-button .span-mother span:nth-child(24),
+.case-update-btn.neu-button .span-mother2 span:nth-child(24),
+.pending-action-btn.neu-button .span-mother span:nth-child(24),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(24) { transition-delay: 0.48s; }
+.person-add-btn.neu-button .span-mother span:nth-child(25),
+.person-add-btn.neu-button .span-mother2 span:nth-child(25),
+.case-update-btn.neu-button .span-mother span:nth-child(25),
+.case-update-btn.neu-button .span-mother2 span:nth-child(25),
+.pending-action-btn.neu-button .span-mother span:nth-child(25),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(25) { transition-delay: 0.50s; }
+.person-add-btn.neu-button .span-mother span:nth-child(26),
+.person-add-btn.neu-button .span-mother2 span:nth-child(26),
+.case-update-btn.neu-button .span-mother span:nth-child(26),
+.case-update-btn.neu-button .span-mother2 span:nth-child(26),
+.pending-action-btn.neu-button .span-mother span:nth-child(26),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(26) { transition-delay: 0.52s; }
+.person-add-btn.neu-button .span-mother span:nth-child(27),
+.person-add-btn.neu-button .span-mother2 span:nth-child(27),
+.case-update-btn.neu-button .span-mother span:nth-child(27),
+.case-update-btn.neu-button .span-mother2 span:nth-child(27),
+.pending-action-btn.neu-button .span-mother span:nth-child(27),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(27) { transition-delay: 0.54s; }
+.person-add-btn.neu-button .span-mother span:nth-child(28),
+.person-add-btn.neu-button .span-mother2 span:nth-child(28),
+.case-update-btn.neu-button .span-mother span:nth-child(28),
+.case-update-btn.neu-button .span-mother2 span:nth-child(28),
+.pending-action-btn.neu-button .span-mother span:nth-child(28),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(28) { transition-delay: 0.56s; }
+.person-add-btn.neu-button .span-mother span:nth-child(29),
+.person-add-btn.neu-button .span-mother2 span:nth-child(29),
+.case-update-btn.neu-button .span-mother span:nth-child(29),
+.case-update-btn.neu-button .span-mother2 span:nth-child(29),
+.pending-action-btn.neu-button .span-mother span:nth-child(29),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(29) { transition-delay: 0.58s; }
+.person-add-btn.neu-button .span-mother span:nth-child(30),
+.person-add-btn.neu-button .span-mother2 span:nth-child(30),
+.case-update-btn.neu-button .span-mother span:nth-child(30),
+.case-update-btn.neu-button .span-mother2 span:nth-child(30),
+.pending-action-btn.neu-button .span-mother span:nth-child(30),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(30) { transition-delay: 0.60s; }
+.person-add-btn.neu-button .span-mother span:nth-child(31),
+.person-add-btn.neu-button .span-mother2 span:nth-child(31),
+.case-update-btn.neu-button .span-mother span:nth-child(31),
+.case-update-btn.neu-button .span-mother2 span:nth-child(31),
+.pending-action-btn.neu-button .span-mother span:nth-child(31),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(31) { transition-delay: 0.62s; }
+.person-add-btn.neu-button .span-mother span:nth-child(32),
+.person-add-btn.neu-button .span-mother2 span:nth-child(32),
+.case-update-btn.neu-button .span-mother span:nth-child(32),
+.case-update-btn.neu-button .span-mother2 span:nth-child(32),
+.pending-action-btn.neu-button .span-mother span:nth-child(32),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(32) { transition-delay: 0.64s; }
+.person-add-btn.neu-button .span-mother span:nth-child(33),
+.person-add-btn.neu-button .span-mother2 span:nth-child(33),
+.case-update-btn.neu-button .span-mother span:nth-child(33),
+.case-update-btn.neu-button .span-mother2 span:nth-child(33),
+.pending-action-btn.neu-button .span-mother span:nth-child(33),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(33) { transition-delay: 0.66s; }
+.person-add-btn.neu-button .span-mother span:nth-child(34),
+.person-add-btn.neu-button .span-mother2 span:nth-child(34),
+.case-update-btn.neu-button .span-mother span:nth-child(34),
+.case-update-btn.neu-button .span-mother2 span:nth-child(34),
+.pending-action-btn.neu-button .span-mother span:nth-child(34),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(34) { transition-delay: 0.68s; }
+.person-add-btn.neu-button .span-mother span:nth-child(35),
+.person-add-btn.neu-button .span-mother2 span:nth-child(35),
+.case-update-btn.neu-button .span-mother span:nth-child(35),
+.case-update-btn.neu-button .span-mother2 span:nth-child(35),
+.pending-action-btn.neu-button .span-mother span:nth-child(35),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(35) { transition-delay: 0.70s; }
+.person-add-btn.neu-button .span-mother span:nth-child(36),
+.person-add-btn.neu-button .span-mother2 span:nth-child(36),
+.case-update-btn.neu-button .span-mother span:nth-child(36),
+.case-update-btn.neu-button .span-mother2 span:nth-child(36),
+.pending-action-btn.neu-button .span-mother span:nth-child(36),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(36) { transition-delay: 0.72s; }
+.person-add-btn.neu-button .span-mother span:nth-child(37),
+.person-add-btn.neu-button .span-mother2 span:nth-child(37),
+.case-update-btn.neu-button .span-mother span:nth-child(37),
+.case-update-btn.neu-button .span-mother2 span:nth-child(37),
+.pending-action-btn.neu-button .span-mother span:nth-child(37),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(37) { transition-delay: 0.74s; }
+.person-add-btn.neu-button .span-mother span:nth-child(38),
+.person-add-btn.neu-button .span-mother2 span:nth-child(38),
+.case-update-btn.neu-button .span-mother span:nth-child(38),
+.case-update-btn.neu-button .span-mother2 span:nth-child(38),
+.pending-action-btn.neu-button .span-mother span:nth-child(38),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(38) { transition-delay: 0.76s; }
+.person-add-btn.neu-button .span-mother span:nth-child(39),
+.person-add-btn.neu-button .span-mother2 span:nth-child(39),
+.case-update-btn.neu-button .span-mother span:nth-child(39),
+.case-update-btn.neu-button .span-mother2 span:nth-child(39),
+.pending-action-btn.neu-button .span-mother span:nth-child(39),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(39) { transition-delay: 0.78s; }
+.person-add-btn.neu-button .span-mother span:nth-child(40),
+.person-add-btn.neu-button .span-mother2 span:nth-child(40),
+.case-update-btn.neu-button .span-mother span:nth-child(40),
+.case-update-btn.neu-button .span-mother2 span:nth-child(40),
+.pending-action-btn.neu-button .span-mother span:nth-child(40),
+.pending-action-btn.neu-button .span-mother2 span:nth-child(40) { transition-delay: 0.80s; }
+
+body.dark-mode .person-add-btn.neu-button,
+body.dark-mode .case-update-btn.neu-button,
+body.dark-mode .pending-action-btn.neu-button,
+body.dark-mode a.pending-action-btn.neu-button,
+body.dark-mode a.case-update-btn.neu-button,
+body.dark-mode a.case-cancel-btn.neu-button {
+  box-shadow: inset 4px 4px 10px #121a24, inset -4px -4px 10px #243241 !important;
+}
+
+body.dark-mode .person-add-btn.neu-button {
+  --neu-bg: #253447;
+  --neu-inset-dark: #172330;
+  --neu-outer-dark: #3a4d66;
+  --neu-border: #41546f;
+  --neu-text: #b9d7fb;
+}
+
+body.dark-mode .pending-action-btn.pending-approve-btn,
+body.dark-mode .case-update-btn.neu-button:not(.case-cancel-btn) {
+  --neu-bg: #1f3a2d;
+  --neu-inset-dark: #13251d;
+  --neu-outer-dark: #335746;
+  --neu-border: #456a58;
+  --neu-text: #d7f1e0;
+}
+
+body.dark-mode .pending-action-btn.pending-reject-btn,
+body.dark-mode .case-cancel-btn.neu-button {
+  --neu-bg: #41242a;
+  --neu-inset-dark: #2a171b;
+  --neu-outer-dark: #633841;
+  --neu-border: #7d4d58;
+  --neu-text: #ffd2d9;
+}
+
+body.dark-mode .pending-action-btn.pending-check-btn {
+  --neu-bg: #273343;
+  --neu-inset-dark: #18202c;
+  --neu-outer-dark: #3b4c61;
+  --neu-border: #4d6078;
+  --neu-text: #d5e1f0;
+}
+
+.list-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.list-controls .form-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.list-controls .control-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.list-pagination .page-summary {
+  font-size: 0.85rem;
+  color: #5b6677;
+}
+
+.list-pagination .page-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.list-pagination .page-buttons .pending-action-btn {
+  min-width: 120px;
+}
+
+.file-hint {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.file-meta {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.file-meta .file-chip {
+  background: #eef3fa;
+  border: 1px solid #d5e0f0;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  color: #2d3e55;
+}
+
+.file-meta .file-chip strong {
+  font-weight: 700;
+}

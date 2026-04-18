@@ -1,0 +1,55 @@
+.month-year-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.month-year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #c7ced6;
+}
+
+.remove-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  background: rgba(20, 24, 36, 0.36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.remove-confirm-card {
+  width: min(460px, 100%);
+  padding: 16px 18px;
+}
+
+.remove-confirm-card p {
+  color: #303747;
+}
+
+.remove-confirm-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.remove-confirm-actions .pending-action-btn {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 576px) {
+  .remove-confirm-actions {
+    flex-direction: column;
+  }
+
+  .remove-confirm-actions .pending-action-btn {
+    width: 100%;
+  }
+}

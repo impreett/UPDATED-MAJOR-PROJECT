@@ -1,0 +1,10 @@
+:root {
+  --footer-h: calc(60px * var(--ui-scale, 1));
+}
+
+footer.site-footer {
+  position: relative;
+  z-index: 1005;
+  width: 100%;
+  min-height: var(--footer-h);
+}

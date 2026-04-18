@@ -1,0 +1,57 @@
+.terms-page-content {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+    url("/assets/register-police-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.terms-content-card {
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.terms-header-row {
+  position: relative;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.terms-header-row .terms-back-btn {
+  position: absolute;
+  left: 0;
+}
+
+.terms-back-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.terms-back-btn:hover .span-mother {
+  position: static;
+}
+
+@media (max-width: 767.98px) {
+  .terms-header-row {
+    position: static;
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .terms-header-row .terms-back-btn {
+    position: static;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .terms-page-content {
+    background-attachment: scroll;
+  }
+}

@@ -1,0 +1,73 @@
+﻿<div class="container mt-4">
+  <div class="col-md-6 mx-auto">
+    <h3 class="text-center mb-4">Report an issue</h3>
+    <div *ngIf="tokenError" class="alert alert-danger">
+      Your login session is outdated. Please log out and log in again to use this feature.
+    </div>
+    <form [formGroup]="reportIssueForm" (ngSubmit)="onSubmit()" class="report-issue-form">
+      <div class="mb-3">
+        <label class="form-label required">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Auto-filled email"
+          [value]="userEmail"
+          readonly
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label required">Report</label>
+        <textarea
+          class="form-control"
+          [class.is-invalid]="errors.reportText"
+          rows="6"
+          placeholder="Please describe your issue here..."
+          formControlName="reportText"
+          (input)="errors = {}"
+        ></textarea>
+        <div *ngIf="errors.reportText" class="text-danger" style="font-size: 0.875em; margin-top: 0.25rem">
+          {{ errors.reportText }}
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="pending-action-btn pending-approve-btn neu-button w-100 mt-3"
+        [disabled]="tokenError"
+      >
+        <span aria-hidden="true" class="span-mother">
+          <span>S</span>
+          <span>u</span>
+          <span>b</span>
+          <span>m</span>
+          <span>i</span>
+          <span>t</span>
+          <span>&nbsp;</span>
+          <span>r</span>
+          <span>e</span>
+          <span>p</span>
+          <span>o</span>
+          <span>r</span>
+          <span>t</span>
+        </span>
+        <span aria-hidden="true" class="span-mother2">
+          <span>S</span>
+          <span>u</span>
+          <span>b</span>
+          <span>m</span>
+          <span>i</span>
+          <span>t</span>
+          <span>&nbsp;</span>
+          <span>r</span>
+          <span>e</span>
+          <span>p</span>
+          <span>o</span>
+          <span>r</span>
+          <span>t</span>
+        </span>
+        <span class="visually-hidden">Submit report</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+

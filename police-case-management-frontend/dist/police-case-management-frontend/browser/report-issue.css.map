@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/report-issue/report-issue.css"],
+  "sourcesContent": [".report-issue-form {\n  border: 1px solid #d8e2ef;\n  border-radius: 12px;\n  padding: 16px;\n  background: #ffffff;\n  box-shadow: 0 6px 18px rgba(20, 46, 80, 0.06);\n}\n\n:host-context(body.dark-mode) .report-issue-form {\n  background: #1f2c3a;\n  border-color: #344a60;\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,UAAQ,IAAI,MAAM;AAClB,iBAAe;AACf,WAAS;AACT,cAAY;AACZ,cAAY,EAAE,IAAI,KAAK,KAAK,EAAE,EAAE,EAAE,EAAE,EAAE,EAAE;AAC1C;AAEA,cAAc,IAAI,CAAC,WAAW,CAR7B;AASC,cAAY;AACZ,gBAAc;AACd,cAAY,EAAE,IAAI,KAAK,KAAK,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;AACvC;",
+  "names": []
+}

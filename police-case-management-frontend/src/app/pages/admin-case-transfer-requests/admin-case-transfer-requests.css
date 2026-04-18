@@ -1,0 +1,119 @@
+.card-text b {
+  display: inline-block;
+  width: 140px; /* Slightly wider to fit "Requested by:" */
+}
+
+.transfer-modal-card {
+  max-width: 760px;
+  width: min(760px, 92vw);
+  max-height: min(82vh, 720px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.transfer-inspector-list {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+  overflow-y: auto;
+  max-height: min(52vh, 420px);
+  padding-right: 4px;
+}
+
+.transfer-inspector-card {
+  border: 1px solid #d7e4fb;
+  background: #f8fbff;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.transfer-modal-overlay .app-confirm-card {
+  scrollbar-gutter: stable;
+}
+
+.transfer-inspector-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.transfer-inspector-list::-webkit-scrollbar-thumb {
+  background: rgba(60, 90, 130, 0.3);
+  border-radius: 999px;
+}
+
+.transfer-inspector-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transfer-inspector-name {
+  font-weight: 800;
+  color: #1f365a;
+}
+
+.transfer-inspector-meta {
+  font-size: 0.82rem;
+  color: #5b6677;
+}
+
+.transfer-inspector-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: #2a4266;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip {
+  background: #1d2735;
+  border-color: #324457;
+  color: #d2dbe8;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip.is-pending {
+  background: #2b2417;
+  border-color: #5b4323;
+  color: #f5d49a;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip.is-approved {
+  background: #1a2c21;
+  border-color: #2f563a;
+  color: #bfe8c9;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip.is-rejected {
+  background: #2b1b1b;
+  border-color: #5a2d2d;
+  color: #f3b0b0;
+}
+
+:host-context(body.dark-mode) .reason-value {
+  background: #182330;
+  border-color: #31455a;
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .transfer-inspector-card {
+  background: #141d29;
+  border-color: #33465c;
+}
+
+:host-context(body.dark-mode) .transfer-inspector-name {
+  color: #e3ebf7;
+}
+
+:host-context(body.dark-mode) .transfer-inspector-meta {
+  color: #a9b7c9;
+}
+
+:host-context(body.dark-mode) .transfer-inspector-stats {
+  color: #cfe0f5;
+}
+
+@media (max-width: 576px) {
+  .request-reason {
+    flex-wrap: wrap;
+  }
+}

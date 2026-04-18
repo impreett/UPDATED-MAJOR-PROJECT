@@ -1,0 +1,87 @@
+.transfer-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.month-year-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.month-year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #c7ced6;
+}
+
+.card-text b {
+  display: inline-block;
+  width: 105px;
+}
+
+.transfer-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: #eef1f6;
+  color: #394556;
+  border: 1px solid #d4dbe6;
+}
+
+.transfer-status-chip.is-pending {
+  background: #fff6e5;
+  color: #8a5b00;
+  border-color: #f2d7a7;
+}
+
+.transfer-status-chip.is-approved {
+  background: #e9f7ef;
+  color: #1f6a3f;
+  border-color: #bfe4cf;
+}
+
+.transfer-status-chip.is-rejected {
+  background: #fdeeee;
+  color: #8a1f1f;
+  border-color: #f1c7c7;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip {
+  background: #1d2735;
+  border-color: #324457;
+  color: #d2dbe8;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip.is-pending {
+  background: #2b2417;
+  border-color: #5b4323;
+  color: #f5d49a;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip.is-approved {
+  background: #1a2c21;
+  border-color: #2f563a;
+  color: #bfe8c9;
+}
+
+:host-context(body.dark-mode) .transfer-status-chip.is-rejected {
+  background: #2b1b1b;
+  border-color: #5a2d2d;
+  color: #f3b0b0;
+}
+
+:host-context(body.dark-mode) .month-year-heading::after {
+  background-color: #2f3d4e;
+}

@@ -1,0 +1,262 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Check side by side</h2>
+    <a routerLink="/commissioner/pending-updates" class="pending-action-btn pending-check-btn neu-button">
+      <span class="span-mother" aria-hidden="true">
+        <span>B</span><span>a</span><span>c</span><span>k</span>
+      </span>
+      <span class="span-mother2" aria-hidden="true">
+        <span>B</span><span>a</span><span>c</span><span>k</span>
+      </span>
+      <span class="visually-hidden">Back</span>
+    </a>
+  </div>
+
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="!loading && error" class="alert alert-danger">{{ error }}</div>
+
+  <ng-container *ngIf="!loading && !error && update">
+    <div class="card mb-4 shadow-sm pending-user-surface">
+      <div class="card-header"><strong>Case ID: {{ update.originalCaseId }}</strong></div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6 d-flex flex-column">
+            <h5 class="text-muted">Original</h5>
+            <table class="table table-sm table-striped mb-2 comparison-table">
+              <tbody>
+                <tr><th>Title</th><td>{{ original?.case_title || '' }}</td></tr>
+                <tr><th>Type</th><td>{{ original?.case_type || '' }}</td></tr>
+                <tr>
+                  <th>Description</th>
+                  <td><span style="white-space: pre-wrap">{{ original?.case_description || '' }}</span></td>
+                </tr>
+                <tr>
+                  <th>Suspects</th>
+                  <td>
+                    <ng-container *ngIf="peopleFor(original?.suspects) as originalSuspects">
+                      <ng-container *ngIf="originalSuspects.length; else noOriginalSuspects">
+                        <span class="people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(original)">
+                          <span class="person-line" *ngFor="let person of originalSuspects">
+                            <span class="person-name-part">Name: {{ person.name }}</span>
+                            <span class="person-age-part">Age: {{ person.age }}</span>
+                          </span>
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noOriginalSuspects>Unidentified</ng-template>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Victim</th>
+                  <td>
+                    <ng-container *ngIf="peopleFor(original?.victim) as originalVictims">
+                      <ng-container *ngIf="originalVictims.length; else noOriginalVictims">
+                        <span class="people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(original)">
+                          <span class="person-line" *ngFor="let person of originalVictims">
+                            <span class="person-name-part">Name: {{ person.name }}</span>
+                            <span class="person-age-part">Age: {{ person.age }}</span>
+                          </span>
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noOriginalVictims>Unidentified</ng-template>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Guilty</th>
+                  <td>
+                    <ng-container *ngIf="peopleFor(original?.guilty_name) as originalGuiltyPeople">
+                      <ng-container *ngIf="originalGuiltyPeople.length; else noOriginalGuilty">
+                        <span class="people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(original)">
+                          <span class="person-line" *ngFor="let person of originalGuiltyPeople">
+                            <span class="person-name-part">Name: {{ person.name }}</span>
+                            <span class="person-age-part">Age: {{ person.age }}</span>
+                          </span>
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noOriginalGuilty>Unidentified</ng-template>
+                  </td>
+                </tr>
+                <tr><th>Date</th><td>{{ original?.case_date || '' }}</td></tr>
+                <tr><th>Handler</th><td>{{ original?.case_handler || '' }}</td></tr>
+                <tr><th>Status</th><td>{{ original?.status || original?.active_close || '' }}</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-6 d-flex flex-column">
+            <h5 class="text-muted">Update request</h5>
+            <table class="table table-sm table-striped mb-2 comparison-table">
+              <tbody>
+                <tr><th>Title</th><td>{{ update.case_title }}</td></tr>
+                <tr><th>Type</th><td>{{ update.case_type }}</td></tr>
+                <tr>
+                  <th>Description</th>
+                  <td><span style="white-space: pre-wrap">{{ update.case_description }}</span></td>
+                </tr>
+                <tr>
+                  <th>Suspects</th>
+                  <td>
+                    <ng-container *ngIf="peopleFor(update.suspects) as updateSuspects">
+                      <ng-container *ngIf="updateSuspects.length; else noUpdateSuspects">
+                        <span class="people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(update)">
+                          <span class="person-line" *ngFor="let person of updateSuspects">
+                            <span class="person-name-part">Name: {{ person.name }}</span>
+                            <span class="person-age-part">Age: {{ person.age }}</span>
+                          </span>
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noUpdateSuspects>Unidentified</ng-template>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Victim</th>
+                  <td>
+                    <ng-container *ngIf="peopleFor(update.victim) as updateVictims">
+                      <ng-container *ngIf="updateVictims.length; else noUpdateVictims">
+                        <span class="people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(update)">
+                          <span class="person-line" *ngFor="let person of updateVictims">
+                            <span class="person-name-part">Name: {{ person.name }}</span>
+                            <span class="person-age-part">Age: {{ person.age }}</span>
+                          </span>
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noUpdateVictims>Unidentified</ng-template>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Guilty</th>
+                  <td>
+                    <ng-container *ngIf="peopleFor(update.guilty_name) as updateGuiltyPeople">
+                      <ng-container *ngIf="updateGuiltyPeople.length; else noUpdateGuilty">
+                        <span class="people-lines" [style.--people-name-col]="peopleNameColumnWidthFor(update)">
+                          <span class="person-line" *ngFor="let person of updateGuiltyPeople">
+                            <span class="person-name-part">Name: {{ person.name }}</span>
+                            <span class="person-age-part">Age: {{ person.age }}</span>
+                          </span>
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noUpdateGuilty>Unidentified</ng-template>
+                  </td>
+                </tr>
+                <tr><th>Date</th><td>{{ update.case_date }}</td></tr>
+                <tr><th>Handler</th><td>{{ update.case_handler }}</td></tr>
+                <tr><th>Status</th><td>{{ update.status }}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="mt-3">
+          <h5 class="text-muted mb-2">Evidence comparison</h5>
+          <div class="evidence-comparison-grid">
+            <div class="evidence-comparison-panel">
+              <div class="evidence-panel-title">Original evidence</div>
+              <ng-container *ngIf="evidenceFor(original?.evidence) as originalEvidence">
+                <div *ngIf="originalEvidence.length; else noOriginalEvidence" class="evidence-list">
+                  <div class="evidence-card" *ngFor="let evidence of originalEvidence">
+                    <div class="evidence-name">{{ evidence.name }}</div>
+                    <ng-container *ngIf="isImageEvidence(evidence); else originalNotImage">
+                      <a [href]="evidence.url" target="_blank" rel="noopener" class="evidence-link">
+                        <img class="evidence-image" [src]="evidence.url" [alt]="evidence.name" loading="lazy" />
+                      </a>
+                    </ng-container>
+                    <ng-template #originalNotImage>
+                      <ng-container *ngIf="isVideoEvidence(evidence); else originalGenericEvidence">
+                        <video class="evidence-video" controls preload="metadata">
+                          <source [src]="evidence.url" [type]="evidence.fileType" />
+                        </video>
+                        <a [href]="evidence.url" target="_blank" rel="noopener" class="evidence-link">Open video</a>
+                      </ng-container>
+                    </ng-template>
+                    <ng-template #originalGenericEvidence>
+                      <a [href]="evidence.url" target="_blank" rel="noopener" class="evidence-link">Download / open file</a>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noOriginalEvidence>
+                <span class="text-muted">No evidence attached.</span>
+              </ng-template>
+            </div>
+
+            <div class="evidence-comparison-panel">
+              <div class="evidence-panel-title">Requested evidence</div>
+              <ng-container *ngIf="evidenceFor(update?.evidence) as updateEvidence">
+                <div *ngIf="updateEvidence.length; else noUpdateEvidence" class="evidence-list">
+                  <div class="evidence-card" *ngFor="let evidence of updateEvidence">
+                    <div class="evidence-name">{{ evidence.name }}</div>
+                    <ng-container *ngIf="isImageEvidence(evidence); else updateNotImage">
+                      <a [href]="evidence.url" target="_blank" rel="noopener" class="evidence-link">
+                        <img class="evidence-image" [src]="evidence.url" [alt]="evidence.name" loading="lazy" />
+                      </a>
+                    </ng-container>
+                    <ng-template #updateNotImage>
+                      <ng-container *ngIf="isVideoEvidence(evidence); else updateGenericEvidence">
+                        <video class="evidence-video" controls preload="metadata">
+                          <source [src]="evidence.url" [type]="evidence.fileType" />
+                        </video>
+                        <a [href]="evidence.url" target="_blank" rel="noopener" class="evidence-link">Open video</a>
+                      </ng-container>
+                    </ng-template>
+                    <ng-template #updateGenericEvidence>
+                      <a [href]="evidence.url" target="_blank" rel="noopener" class="evidence-link">Download / open file</a>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noUpdateEvidence>
+                <span class="text-muted">No evidence attached.</span>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3">
+          <h5 class="text-muted mb-2">Changes done</h5>
+          <ng-container *ngIf="changesDoneFor(update?.changes_done) as changesDone">
+            <ul *ngIf="changesDone.length; else noChangesDone" class="mb-0 ps-3">
+              <li *ngFor="let item of changesDone">
+                <span style="white-space: pre-wrap">{{ item }}</span>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #noChangesDone>
+            <span class="text-muted">N/A</span>
+          </ng-template>
+        </div>
+        <div class="d-flex gap-2 pending-update-actions mt-3">
+          <button
+            class="pending-action-btn pending-approve-btn neu-button"
+            [disabled]="actionLoading"
+            (click)="handleApprove()"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>A</span><span>p</span><span>p</span><span>r</span><span>o</span><span>v</span><span>e</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>A</span><span>p</span><span>p</span><span>r</span><span>o</span><span>v</span><span>e</span>
+            </span>
+            <span class="visually-hidden">Approve</span>
+          </button>
+          <button
+            class="pending-action-btn pending-reject-btn neu-button"
+            [disabled]="actionLoading"
+            (click)="handleReject()"
+          >
+            <span class="span-mother" aria-hidden="true">
+              <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>R</span><span>e</span><span>j</span><span>e</span><span>c</span><span>t</span>
+            </span>
+            <span class="visually-hidden">Reject</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+

@@ -1,0 +1,88 @@
+<div class="container mt-4">
+  <div *ngIf="loading">Loading completed cases...</div>
+
+  <div *ngIf="!loading">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+      <h2 class="mb-0">Completed cases</h2>
+      <div class="d-flex justify-content-end align-items-center gap-2 flex-wrap" *ngIf="cases.length > 1">
+        <span class="fw-semibold">Sort:</span>
+        <div
+          class="sort-tabs"
+          role="group"
+          aria-label="Sort cases"
+          [class.is-latest]="sortOrder === 'latest'"
+          [class.is-oldest]="sortOrder === 'oldest'"
+        >
+          <button
+            type="button"
+            class="sort-btn"
+            [class.active]="sortOrder === 'latest'"
+            (click)="setSortOrder('latest')"
+          >
+            <span class="neu-text" aria-hidden="true">
+              <span class="neu-text-primary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+              <span class="neu-text-secondary"><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span></span>
+            </span>
+            <span class="visually-hidden">Latest</span>
+          </button>
+          <button
+            type="button"
+            class="sort-btn"
+            [class.active]="sortOrder === 'oldest'"
+            (click)="setSortOrder('oldest')"
+          >
+            <span class="neu-text" aria-hidden="true">
+              <span class="neu-text-primary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+              <span class="neu-text-secondary"><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span><span>t</span></span>
+            </span>
+            <span class="visually-hidden">Oldest</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="groupedCases.length > 0; else noCases">
+      <ng-container *ngFor="let group of groupedCases; trackBy: trackByGroup">
+        <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+        <article *ngFor="let caseItem of group.items; trackBy: trackByCase" class="card mb-3">
+          <div class="card-body">
+            <h3 class="card-title">
+              <a [routerLink]="['/case', caseItem._id]">{{ caseItem.case_title }}</a>
+            </h3>
+            <p class="mb-1"><strong>Case Type:</strong> {{ caseItem.case_type }}</p>
+            <p class="mb-1"><strong>Case Date:</strong> {{ caseItem.case_date | date: 'dd-MM-yyyy' }}</p>
+            <p class="mb-1"><strong>Inspector:</strong> {{ caseItem.case_handler || 'N/A' }}</p>
+            <p class="mb-3">{{ caseItem.case_description }}</p>
+
+            <a
+              class="pending-action-btn pending-check-btn neu-button"
+              [routerLink]="['/citizen/report-inspector']"
+              [queryParams]="{ inspectorName: caseItem.case_handler || '' }"
+            >
+              <span class="span-mother" aria-hidden="true"><span>R</span><span>e</span><span>p</span><span>o</span><span>r</span><span>t</span></span>
+              <span class="span-mother2" aria-hidden="true"><span>R</span><span>e</span><span>p</span><span>o</span><span>r</span><span>t</span></span>
+              <span class="visually-hidden">Report</span>
+            </a>
+          </div>
+        </article>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #noCases>
+      <div class="alert alert-info">No completed cases found.</div>
+    </ng-template>
+
+    <div class="list-pagination" *ngIf="totalCases > 0">
+      <div class="page-summary">{{ pageSummary }}</div>
+      <div class="page-buttons">
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === 1" (click)="prevPage()">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+        <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

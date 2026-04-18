@@ -1,0 +1,131 @@
+<div class="container mt-4">
+  <a routerLink="/citizen/pay-fine" class="pending-action-btn pending-check-btn neu-button">
+    <span class="span-mother" aria-hidden="true">
+      <span>&larr;</span><span>&nbsp;</span><span>B</span><span>a</span><span>c</span><span>k</span><span>&nbsp;</span><span>t</span><span>o</span><span>&nbsp;</span><span>f</span><span>i</span><span>n</span><span>e</span><span>s</span>
+    </span>
+    <span class="span-mother2" aria-hidden="true">
+      <span>&larr;</span><span>&nbsp;</span><span>B</span><span>a</span><span>c</span><span>k</span><span>&nbsp;</span><span>t</span><span>o</span><span>&nbsp;</span><span>f</span><span>i</span><span>n</span><span>e</span><span>s</span>
+    </span>
+    <span class="visually-hidden">Back to fines</span>
+  </a>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="!loading && !errorMessage && !fine"
+    loadingTitle="Loading fine..."
+    loadingMessage="Fetching fine details. Please wait."
+    emptyTitle="Fine not found"
+    emptyMessage="We could not find that fine."
+    (retry)="fetchFine()"
+  ></app-state-panel>
+
+  <article *ngIf="!loading && !errorMessage && fine" class="card fine-detail-card">
+    <div class="card-body">
+      <p class="detail-row">
+        <span class="detail-label"><b>Amount (₹):</b></span>
+        <span class="detail-value">₹{{ fine.amount }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Status:</b></span>
+        <span class="detail-value">{{ statusLabel(fine) }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Issued:</b></span>
+        <span class="detail-value">{{ fine.createdAt | date: 'dd-MM-yyyy HH:mm' }}</span>
+      </p>
+      <p class="detail-row" *ngIf="fine.paid_at">
+        <span class="detail-label"><b>Paid:</b></span>
+        <span class="detail-value">{{ fine.paid_at | date: 'dd-MM-yyyy HH:mm' }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Issued by:</b></span>
+        <span class="detail-value">{{ fine.issued_by_name || 'Inspector' }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Person:</b></span>
+        <span class="detail-value">{{ fine.person_name }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Mobile:</b></span>
+        <span class="detail-value">{{ fine.mobile_number }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Email:</b></span>
+        <span class="detail-value">{{ fine.email }}</span>
+      </p>
+      <p class="detail-row">
+        <span class="detail-label"><b>Aadhar card number:</b></span>
+        <span class="detail-value">{{ formatAadhar(fine.aadhar_number) }}</span>
+      </p>
+      <p class="detail-row reason-row">
+        <span class="detail-label"><b>Reason:</b></span>
+        <span class="detail-value reason-value">{{ fine.reason }}</span>
+      </p>
+
+      <div class="detail-row evidence-row">
+        <span class="detail-label evidence-label"><b>Evidence:</b></span>
+        <span class="detail-value">
+          <ng-container *ngIf="evidenceDisplay.length; else noEvidence">
+            <div class="evidence-list">
+              <div class="evidence-item" *ngFor="let evidence of evidenceDisplay; let i = index">
+                <div class="evidence-name">
+                  <b>Evidence Name:</b> {{ evidence.name }}
+                </div>
+                <div class="evidence-file">
+                  <div class="evidence-file-label"><b>Evidence File:</b></div>
+
+                  <ng-container *ngIf="isImageEvidence(evidence); else notImageEvidence">
+                    <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                      <img class="evidence-image" [src]="evidence.url" [alt]="evidence.name" loading="lazy" />
+                    </a>
+                  </ng-container>
+
+                  <ng-template #notImageEvidence>
+                    <ng-container *ngIf="isVideoEvidence(evidence); else genericEvidence">
+                      <video class="evidence-video" controls preload="metadata">
+                        <source [src]="evidence.url" [type]="evidence.fileType" />
+                      </video>
+                      <div>
+                        <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                          Open video
+                        </a>
+                      </div>
+                    </ng-container>
+                  </ng-template>
+
+                  <ng-template #genericEvidence>
+                    <a class="evidence-link" [href]="evidence.url" target="_blank" rel="noopener">
+                      Download / open file
+                    </a>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noEvidence>
+            <span class="text-muted">No evidence available.</span>
+          </ng-template>
+        </span>
+      </div>
+
+      <div class="fine-actions">
+        <button
+          type="button"
+          class="pending-action-btn pending-approve-btn neu-button"
+          *ngIf="canPay(fine)"
+          [disabled]="paying"
+          (click)="payFine()"
+        >
+          <span class="span-mother" aria-hidden="true">
+            <span>P</span><span>a</span><span>y</span>
+          </span>
+          <span class="span-mother2" aria-hidden="true">
+            <span>P</span><span>a</span><span>y</span>
+          </span>
+          <span class="visually-hidden">Pay</span>
+        </button>
+      </div>
+    </div>
+  </article>
+</div>

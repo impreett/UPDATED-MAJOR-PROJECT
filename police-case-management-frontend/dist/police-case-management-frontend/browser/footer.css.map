@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/footer/footer.css"],
+  "sourcesContent": [":root {\n  --footer-h: calc(60px * var(--ui-scale, 1));\n}\n\nfooter.site-footer {\n  position: relative;\n  z-index: 1005;\n  width: 100%;\n  min-height: var(--footer-h);\n}\n"],
+  "mappings": ";AAAA;AACE,cAAY,KAAK,KAAK,EAAE,IAAI,UAAU,EAAE;AAC1C;AAEA,MAAM,CAAC;AACL,YAAU;AACV,WAAS;AACT,SAAO;AACP,cAAY,IAAI;AAClB;",
+  "names": []
+}

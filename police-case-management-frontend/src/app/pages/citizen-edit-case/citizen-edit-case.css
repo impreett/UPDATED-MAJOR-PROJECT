@@ -1,0 +1,178 @@
+.citizen-edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.person-list-item {
+  gap: 8px;
+}
+
+.person-list-item .btn-close {
+  align-self: center;
+}
+
+.people-role-list .list-group-item {
+  padding-left: 0;
+  border: 0;
+  background-color: transparent;
+}
+
+.people-role-list .person-list-item {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.people-roles-row > .col-md-6 > .p-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.people-roles-row > .col-md-6 > .p-2 > .fw-semibold {
+  width: min(100%, 94%);
+}
+
+.people-role-list,
+.person-add-row {
+  width: min(100%, 94%);
+  margin-inline: auto;
+}
+
+.person-edit-entry {
+  width: 100%;
+}
+
+.person-edit-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 34px 78px;
+  column-gap: 8px;
+  align-items: center;
+}
+
+.person-edit-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.person-add-row {
+  display: block;
+  margin-top: 8px;
+}
+
+.person-add-btn {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.person-add-placeholder {
+  display: none;
+}
+
+.evidence-editor-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-editor-row {
+  border: 1px solid #dde6f1;
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+.evidence-editor-inputs {
+  align-items: flex-start !important;
+}
+
+.evidence-editor-inputs .col-2 {
+  align-items: flex-start !important;
+  padding-top: 1.75rem;
+}
+
+.evidence-existing-link a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.evidence-existing-link a:hover {
+  text-decoration: underline;
+}
+
+.citizen-edit-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.citizen-edit-surface {
+  border-radius: 14px;
+}
+
+.citizen-edit-surface .people-involved-box {
+  background: #ffffff;
+  border-color: #dde6f1 !important;
+}
+
+@media (min-width: 768px) {
+  .people-col-divider {
+    position: relative;
+  }
+
+  .people-col-divider::after {
+    content: '';
+    position: absolute;
+    top: -1rem;
+    bottom: -1rem;
+    right: 0;
+    width: 1px;
+    background-color: #e9ecef;
+  }
+}
+
+:host-context(body.dark-mode) .citizen-edit-surface .people-involved-box {
+  background: #141d29;
+  border-color: #33465c !important;
+}
+
+:host-context(body.dark-mode) .evidence-editor-row {
+  background: #141d29;
+  border-color: #33465c;
+}
+
+:host-context(body.dark-mode) .citizen-edit-surface .people-col-divider::after {
+  background-color: #2e3f53;
+}
+
+:host-context(body.dark-mode) .citizen-edit-surface .person-edit-label {
+  color: #cdd9e8;
+}
+
+:host-context(body.dark-mode) .citizen-edit-surface .people-role-list .list-group-item {
+  color: #dce5ef;
+}
+
+:host-context(body.dark-mode) .citizen-edit-surface .people-role-list .list-group-item.text-muted {
+  color: #9fb0c5 !important;
+}
+
+:host-context(body.dark-mode) .citizen-edit-surface .btn-close {
+  filter: invert(1) brightness(1.2);
+  opacity: 0.88;
+}
+
+@media (max-width: 576px) {
+  .citizen-edit-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

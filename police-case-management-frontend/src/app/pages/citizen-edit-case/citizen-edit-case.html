@@ -1,0 +1,292 @@
+<div class="container mt-4" style="margin-bottom: 30px">
+  <div *ngIf="loading">Loading form...</div>
+  <div *ngIf="!loading && error" class="alert alert-danger">{{ error }}</div>
+
+  <ng-container *ngIf="!loading && !error">
+    <div class="p-4 mb-4 citizen-edit-surface pending-user-surface">
+      <div class="citizen-edit-header">
+        <div>
+          <h3 class="mb-1">Edit submitted case</h3>
+          <p class="text-muted mb-0" *ngIf="caseItem?.citizen_review_status === 'COMMISSIONER_REVIEW'">
+            Saving changes sends this case back to inspector review.
+          </p>
+        </div>
+        <a routerLink="/citizen/case-status" class="pending-action-btn pending-check-btn neu-button">
+          <span class="span-mother" aria-hidden="true"><span>B</span><span>a</span><span>c</span><span>k</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>B</span><span>a</span><span>c</span><span>k</span></span>
+          <span class="visually-hidden">Back</span>
+        </a>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="mb-3">
+          <label class="form-label required">Case type</label>
+          <select formControlName="case_type" class="form-select" [class.is-invalid]="errors.case_type">
+            <option value="">Select case type</option>
+            <option *ngFor="let option of caseTypeOptions" [value]="option">{{ option }}</option>
+          </select>
+          <div *ngIf="errors.case_type" class="invalid-feedback">{{ errors.case_type }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required">Case description</label>
+          <textarea
+            formControlName="case_description"
+            class="form-control"
+            rows="5"
+            [class.is-invalid]="errors.case_description"
+          ></textarea>
+          <div *ngIf="errors.case_description" class="invalid-feedback">
+            {{ errors.case_description }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">People involved</label>
+          <div *ngIf="errors.involvedPeople" class="text-danger small mb-2">
+            {{ errors.involvedPeople }}
+          </div>
+
+          <div class="border rounded p-3 mb-3 people-involved-box">
+            <div class="row g-3 people-roles-row">
+              <div class="col-md-6 people-col-divider">
+                <div class="p-2 h-100">
+                  <div class="fw-semibold mb-2">Suspect</div>
+                  <ul class="list-group list-group-flush people-role-list">
+                    <li class="list-group-item text-muted small" *ngIf="suspectPeople.length === 0">
+                      Unidentified
+                    </li>
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center person-list-item"
+                      *ngFor="let person of suspectPeople; trackBy: trackByIndex"
+                    >
+                      <div class="person-edit-entry">
+                        <div class="person-edit-row">
+                          <label class="person-edit-label">Name</label>
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            maxlength="20"
+                            placeholder="Enter name"
+                            [value]="person.name"
+                            (input)="onPersonNameChange(person.index, $any($event.target).value)"
+                          />
+                          <label class="person-edit-label">Age</label>
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            min="0"
+                            max="120"
+                            placeholder="Age (optional)"
+                            [value]="person.age"
+                            (input)="onPersonAgeChange(person.index, $any($event.target).value)"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        aria-label="Remove suspect"
+                        (click)="removePerson(person.index)"
+                      ></button>
+                    </li>
+                  </ul>
+                  <div class="person-add-row">
+                    <button type="button" class="person-add-btn neu-button" (click)="addPersonForRole('suspects')">
+                      <span class="span-mother" aria-hidden="true">
+                        <span>+</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span>
+                      </span>
+                      <span class="span-mother2" aria-hidden="true">
+                        <span>+</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span>
+                      </span>
+                      <span class="visually-hidden">+ Add</span>
+                    </button>
+                    <span class="btn-close person-add-placeholder" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="p-2 h-100">
+                  <div class="fw-semibold mb-2">Victim</div>
+                  <ul class="list-group list-group-flush people-role-list">
+                    <li class="list-group-item text-muted small" *ngIf="victimPeople.length === 0">
+                      Unidentified
+                    </li>
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center person-list-item"
+                      *ngFor="let person of victimPeople; trackBy: trackByIndex"
+                    >
+                      <div class="person-edit-entry">
+                        <div class="person-edit-row">
+                          <label class="person-edit-label">Name</label>
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            maxlength="20"
+                            placeholder="Enter name"
+                            [value]="person.name"
+                            (input)="onPersonNameChange(person.index, $any($event.target).value)"
+                          />
+                          <label class="person-edit-label">Age</label>
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            min="0"
+                            max="120"
+                            placeholder="Age (optional)"
+                            [value]="person.age"
+                            (input)="onPersonAgeChange(person.index, $any($event.target).value)"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        aria-label="Remove victim"
+                        (click)="removePerson(person.index)"
+                      ></button>
+                    </li>
+                  </ul>
+                  <div class="person-add-row">
+                    <button type="button" class="person-add-btn neu-button" (click)="addPersonForRole('victim')">
+                      <span class="span-mother" aria-hidden="true">
+                        <span>+</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span>
+                      </span>
+                      <span class="span-mother2" aria-hidden="true">
+                        <span>+</span><span>&nbsp;</span><span>A</span><span>d</span><span>d</span>
+                      </span>
+                      <span class="visually-hidden">+ Add</span>
+                    </button>
+                    <span class="btn-close person-add-placeholder" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required">Case date</label>
+          <input
+            type="date"
+            formControlName="case_date"
+            class="form-control"
+            [class.is-invalid]="errors.case_date"
+            [max]="todayStr"
+          />
+          <div *ngIf="errors.case_date" class="invalid-feedback">{{ errors.case_date }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Evidence entries</label>
+          <div class="text-muted small mb-2">Images or videos only. Max 15MB.</div>
+          <div *ngIf="errors.evidence" class="text-danger small mb-2">
+            {{ errors.evidence }}
+          </div>
+          <div class="evidence-editor-list">
+            <div
+              *ngFor="let evidence of evidenceEntries; let i = index; trackBy: trackByEvidenceIndex"
+              class="evidence-editor-row"
+            >
+              <div class="row g-2 align-items-start flex-nowrap evidence-editor-inputs">
+                <div class="col-5">
+                  <label class="form-label">Evidence name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [value]="evidence.evidence_name"
+                    [class.is-invalid]="!!getEvidenceError(i, 'evidence_name')"
+                    (input)="onEvidenceNameChange(i, $any($event.target).value)"
+                  />
+                </div>
+                <div class="col-5">
+                  <label class="form-label">Evidence file</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    accept="image/*,video/*"
+                    [class.is-invalid]="!!getEvidenceError(i, 'evidence_file')"
+                    (change)="onEvidenceFileChange(i, $event)"
+                    #evidenceFileInput
+                  />
+                  <div *ngIf="evidence.existing_file_url" class="evidence-existing-link mt-2">
+                    <a [href]="evidenceLink(evidence)" target="_blank" rel="noopener">View evidence</a>
+                  </div>
+                </div>
+                <div class="col-2 d-flex align-items-start">
+                  <button
+                    type="button"
+                    class="pending-action-btn pending-reject-btn neu-button w-100"
+                    (click)="removeEvidence(i)"
+                  >
+                    <span class="span-mother" aria-hidden="true">
+                      <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span>
+                    </span>
+                    <span class="span-mother2" aria-hidden="true">
+                      <span>R</span><span>e</span><span>m</span><span>o</span><span>v</span><span>e</span>
+                    </span>
+                    <span class="visually-hidden">Remove evidence</span>
+                  </button>
+                </div>
+              </div>
+              <div class="row g-2 flex-nowrap evidence-editor-meta">
+                <div class="col-5">
+                  <div *ngIf="getEvidenceError(i, 'evidence_name')" class="invalid-feedback d-block">
+                    {{ getEvidenceError(i, 'evidence_name') }}
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div *ngIf="evidence.evidence_file" class="file-meta">
+                    <span class="file-chip"><strong>Selected:</strong> {{ evidenceFileLabel(evidence) }}</span>
+                    <button
+                      type="button"
+                      class="pending-action-btn pending-check-btn neu-button"
+                      (click)="clearEvidenceFile(i, evidenceFileInput)"
+                    >
+                      Clear file
+                    </button>
+                  </div>
+                  <div *ngIf="getEvidenceError(i, 'evidence_file')" class="invalid-feedback d-block">
+                    {{ getEvidenceError(i, 'evidence_file') }}
+                  </div>
+                </div>
+                <div class="col-2"></div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="pending-action-btn pending-check-btn neu-button mt-3" (click)="addEvidence()">
+            <span class="span-mother" aria-hidden="true">
+              <span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>E</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>A</span><span>d</span><span>d</span><span>&nbsp;</span><span>E</span><span>v</span><span>i</span><span>d</span><span>e</span><span>n</span><span>c</span><span>e</span>
+            </span>
+            <span class="visually-hidden">Add evidence</span>
+          </button>
+        </div>
+
+        <div class="citizen-edit-actions">
+          <button type="submit" class="pending-action-btn pending-approve-btn neu-button" [disabled]="submitting">
+            <span class="span-mother" aria-hidden="true">
+              <span>S</span><span>a</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>h</span><span>a</span><span>n</span><span>g</span><span>e</span><span>s</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>S</span><span>a</span><span>v</span><span>e</span><span>&nbsp;</span><span>c</span><span>h</span><span>a</span><span>n</span><span>g</span><span>e</span><span>s</span>
+            </span>
+            <span class="visually-hidden">Save changes</span>
+          </button>
+          <a routerLink="/citizen/case-status" class="pending-action-btn pending-check-btn neu-button">
+            <span class="span-mother" aria-hidden="true">
+              <span>C</span><span>a</span><span>n</span><span>c</span><span>e</span><span>l</span>
+            </span>
+            <span class="span-mother2" aria-hidden="true">
+              <span>C</span><span>a</span><span>n</span><span>c</span><span>e</span><span>l</span>
+            </span>
+            <span class="visually-hidden">Cancel</span>
+          </a>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</div>

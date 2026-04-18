@@ -1,0 +1,131 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h2 class="mb-0">All reports</h2>
+    <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="totalReports > 1">
+      <span class="fw-semibold">Sort:</span>
+      <div
+        class="sort-tabs"
+        role="group"
+        aria-label="Sort reports"
+        [class.is-latest]="sortOrder === 'latest'"
+        [class.is-oldest]="sortOrder === 'oldest'"
+      >
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'latest'"
+          (click)="setSortOrder('latest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"
+              ><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span
+              ><span>t</span></span
+            >
+            <span class="neu-text-secondary"
+              ><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span
+              ><span>t</span></span
+            >
+          </span>
+          <span class="visually-hidden">Latest</span>
+        </button>
+        <button
+          type="button"
+          class="sort-btn"
+          [class.active]="sortOrder === 'oldest'"
+          (click)="setSortOrder('oldest')"
+        >
+          <span class="neu-text" aria-hidden="true">
+            <span class="neu-text-primary"
+              ><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span
+              ><span>t</span></span
+            >
+            <span class="neu-text-secondary"
+              ><span>O</span><span>l</span><span>d</span><span>e</span><span>s</span
+              ><span>t</span></span
+            >
+          </span>
+          <span class="visually-hidden">Oldest</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-state-panel
+    [loading]="loading"
+    [error]="errorMessage"
+    [empty]="isEmpty"
+    loadingTitle="Loading reports"
+    loadingMessage="Fetching the latest reports..."
+    emptyTitle="No reports found"
+    emptyMessage="Try adjusting your search filters."
+    (retry)="fetchReports()"
+  ></app-state-panel>
+
+  <ng-container *ngIf="!loading && !errorMessage && totalReports > 0">
+    <ng-container *ngFor="let group of groupedReports; trackBy: trackByGroup">
+      <h5 class="mb-3 text-secondary month-year-heading">{{ group.label }}</h5>
+      <article *ngFor="let report of group.items; trackBy: trackByReport" class="card mb-3">
+        <div class="card-body pending-user-surface">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+              <p class="card-text mb-1 report-text-content"><b>From:</b> {{ report.email }}</p>
+              <p class="card-text mb-1 report-text-content"><b>Date:</b> {{ report.date | date: 'medium' }}</p>
+              <p class="card-text mt-2 mb-0 report-text-content" style="white-space: pre-wrap"><b>Report:</b> {{ report.reportText }}</p>
+            </div>
+            <div class="d-flex gap-2 flex-shrink-0">
+              <button
+                type="button"
+                class="pending-action-btn pending-reject-btn neu-button report-read-btn"
+                style="white-space: nowrap;"
+                (click)="handleMarkAsRead(report._id, report.email, $event)"
+              >
+                <span class="span-mother" aria-hidden="true">
+                  <span>M</span><span>a</span><span>r</span><span>k</span><span>&nbsp;</span><span>a</span><span>s</span><span>&nbsp;</span><span>r</span><span>e</span><span>a</span><span>d</span>
+                </span>
+                <span class="span-mother2" aria-hidden="true">
+                  <span>M</span><span>a</span><span>r</span><span>k</span><span>&nbsp;</span><span>a</span><span>s</span><span>&nbsp;</span><span>r</span><span>e</span><span>a</span><span>d</span>
+                </span>
+                <span class="visually-hidden">Mark as read</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+
+    <div class="list-pagination" *ngIf="totalReports > 0">
+      <div class="page-summary">{{ pageSummary }}</div>
+      <div class="page-buttons">
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="prevPage()" [disabled]="currentPage === 1">
+          <span aria-hidden="true" class="span-mother"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span aria-hidden="true" class="span-mother2"><span>P</span><span>r</span><span>e</span><span>v</span><span>i</span><span>o</span><span>u</span><span>s</span></span><span class="visually-hidden">Previous</span>
+        </button>
+        <div class="page-summary">Page {{ currentPage }} of {{ totalPages }}</div>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <span aria-hidden="true" class="span-mother"><span>N</span><span>e</span><span>x</span><span>t</span></span><span aria-hidden="true" class="span-mother2"><span>N</span><span>e</span><span>x</span><span>t</span></span><span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="readConfirm" class="app-confirm-overlay" role="dialog" aria-modal="true" (click)="closeReadConfirm()">
+    <div class="app-confirm-card pending-user-surface" (click)="$event.stopPropagation()">
+      <h5 class="mb-2">Mark report as read?</h5>
+      <p class="mb-3 app-confirm-text">
+        Are you sure you want to mark the report from <b>{{ readConfirm.from }}</b> as read?
+      </p>
+      <div class="app-confirm-actions">
+        <button type="button" class="pending-action-btn pending-approve-btn neu-button" [disabled]="isMarkingRead" (click)="confirmMarkAsRead()">
+          <span class="span-mother" aria-hidden="true"><span>Y</span><span>e</span><span>s</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>Y</span><span>e</span><span>s</span></span>
+          <span class="visually-hidden">Yes</span>
+        </button>
+        <button type="button" class="pending-action-btn pending-check-btn neu-button" [disabled]="isMarkingRead" (click)="closeReadConfirm()">
+          <span class="span-mother" aria-hidden="true"><span>N</span><span>o</span></span>
+          <span class="span-mother2" aria-hidden="true"><span>N</span><span>o</span></span>
+          <span class="visually-hidden">No</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

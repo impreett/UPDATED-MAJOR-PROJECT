@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/admin-update-case/admin-update-case.css"],
+  "sourcesContent": [".month-year-heading {\n  display: flex;\n  align-items: center;\n  width: 100%;\n  gap: 10px;\n}\n\n.month-year-heading::after {\n  content: '';\n  flex: 1;\n  height: 1px;\n  background-color: #c7ced6;\n}\n\n.search-result-article.search-title-only-card .card-title {\n  margin-bottom: 0 !important;\n  width: 100%;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,WAAS;AACT,eAAa;AACb,SAAO;AACP,OAAK;AACP;AAEA,CAPC,kBAOkB;AACjB,WAAS;AACT,QAAM;AACN,UAAQ;AACR,oBAAkB;AACpB;AAEA,CAAC,qBAAqB,CAAC,uBAAuB,CAAC;AAC7C,iBAAe;AACf,SAAO;AACT;",
+  "names": []
+}
